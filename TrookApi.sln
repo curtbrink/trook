@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookApi", "TrookApi\TrookApi.csproj", "{77D1FE7E-508A-4B08-9CE9-BED584CC6659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookSii", "TrookSii\TrookSii.csproj", "{B42FEFBA-0406-4E34-9F4E-01239EF05663}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77D1FE7E-508A-4B08-9CE9-BED584CC6659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D1FE7E-508A-4B08-9CE9-BED584CC6659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D1FE7E-508A-4B08-9CE9-BED584CC6659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D1FE7E-508A-4B08-9CE9-BED584CC6659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42FEFBA-0406-4E34-9F4E-01239EF05663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42FEFBA-0406-4E34-9F4E-01239EF05663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42FEFBA-0406-4E34-9F4E-01239EF05663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42FEFBA-0406-4E34-9F4E-01239EF05663}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

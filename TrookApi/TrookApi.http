@@ -1,0 +1,6 @@
+@TrookApi_HostAddress = http://localhost:5070
+
+GET {{TrookApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
