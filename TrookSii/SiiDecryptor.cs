@@ -10,7 +10,6 @@ public static class SiiDecryptor
     // - decompressed data is a BSII file
 
     private const uint ScscHeader = 0x43736353;
-    private const uint BsiiHeader = 0x49495342;
 
     private const int HmacSize = 32;
     private const int IvSize = 16;
@@ -23,24 +22,21 @@ public static class SiiDecryptor
     
     public static async Task<byte[]> DecryptScsc(byte[] scscBytes)
     {
-        var idx = 0;
+        var sii = new SiiStream(ref scscBytes);
         
         // verify file type
-        var headerSignature = BitConverter.ToUInt32(scscBytes, idx);
+        var headerSignature = sii.ReadUInt32();
         if (headerSignature != ScscHeader)
         {
             throw new InvalidOperationException("Given file is not an ScsC file");
         }
-
-        idx += sizeof(uint);
         
         // get hmac, iv, datasize
-        var hmac = scscBytes[idx..(idx += HmacSize)];
-        var iv = scscBytes[idx..(idx += IvSize)];
-        var dataSize = BitConverter.ToUInt32(scscBytes, idx);
-        idx += sizeof(uint);
+        var hmac = sii.ReadBytes(HmacSize);
+        var iv = sii.ReadBytes(IvSize);
+        var dataSize = sii.ReadUInt32();
 
-        var data = scscBytes[idx..];
+        var data = sii.DumpRemainingBytes();
 
         using var aes = Aes.Create();
         aes.Key = SiiKey;

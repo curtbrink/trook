@@ -1,4 +1,5 @@
 using System.Text;
+using TrookSii.Types;
 
 namespace TrookSii;
 
@@ -28,59 +29,86 @@ public static class SiiDecoder
     
     private const uint BsiiHeader = 0x49495342;
 
-    public static async Task DecodeSii(byte[] data)
+    public static SiiFile DecodeSii(byte[] data)
     {
-        var idx = 0;
+        var sii = new SiiStream(ref data);
         
         // verify header
-        var header = BitConverter.ToUInt32(data, idx);
-        idx += 4;
+        var header = sii.ReadUInt32();
         if (header != BsiiHeader)
         {
             throw new InvalidOperationException("Unexpected file signature");
         }
 
-        var version = BitConverter.ToUInt32(data, idx);
-        idx += 4;
+        var version = sii.ReadUInt32();
         Console.WriteLine($"File version: {version}");
 
         var validBlock = true;
+        var structureBlocks = new Dictionary<uint, StructureBlock>();
+        var dataBlocks = new List<DataBlock>();
         while (validBlock)
         {
-            validBlock = ParseBlock(ref data, ref idx);
-        }
-    }
-
-    private static bool ParseBlock(ref byte[] data, ref int idx)
-    {
-        var blockType = BitConverter.ToUInt32(data, idx);
-        idx += 4;
-
-        if (blockType == 0)
-        {
-            Console.WriteLine("Structure block!");
-            var validityByte = BitConverter.ToBoolean(data, idx);
-            idx++;
-
-            if (!validityByte)
+            // peek at block type
+            var blockType = sii.ReadUInt32(true);
+            if (blockType == 0)
             {
-                Console.WriteLine("Invalid structure block - must be the end");
-                return false;
+                // structure block
+                validBlock = DecodeStructureBlock(sii, out var block);
+                if (block != null && validBlock) structureBlocks[block.Id] = block;
+            }
+            else
+            {
+                // data block
+                Console.WriteLine("This would be a data block");
             }
 
-            var structureId = BitConverter.ToUInt32(data, idx);
-            idx += 4;
-            Console.WriteLine($"structure id: {structureId}");
-
-            var nameLength = BitConverter.ToUInt32(data, idx);
-            idx += 4;
-            Console.WriteLine($"structure name is {nameLength} bytes");
-
-            var nameBytes = data[idx..(idx += (int)nameLength)];
-            var name = Encoding.UTF8.GetString(nameBytes);
-            Console.WriteLine($"structure name: {name}");
+            validBlock = false;
         }
 
-        return false;
+        Console.WriteLine("forced quit after 1 block");
+
+        return new SiiFile
+        {
+            Signature = header,
+            Version = version,
+            Data = dataBlocks,
+            Structures = structureBlocks
+        };
+    }
+
+    private static bool DecodeStructureBlock(SiiStream sii, out StructureBlock? block)
+    {
+        var blockType = sii.ReadUInt32();
+        if (blockType != 0)
+        {
+            throw new InvalidOperationException($"Not a structure block! expected type=0, got type={blockType}");
+        }
+
+        var validity = sii.ReadBoolByte();
+        if (!validity)
+        {
+            block = null;
+            return false;
+        }
+
+        Console.WriteLine("BEGIN: Structure block");
+
+        var structureId = sii.ReadUInt32();
+        Console.WriteLine($"==> id: {structureId}");
+
+        var nameLength = (int) sii.ReadUInt32();
+        var nameBytes = sii.ReadBytes(nameLength);
+        var name = Encoding.UTF8.GetString(nameBytes);
+        Console.WriteLine($"==> name: {name}");
+
+        Console.WriteLine("END:   Structure block");
+
+        block = new StructureBlock
+        {
+            Id = structureId,
+            Name = name,
+            Values = []
+        };
+        return true;
     }
 }

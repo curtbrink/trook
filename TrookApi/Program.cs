@@ -36,7 +36,9 @@ app.MapGet("/weatherforecast", () =>
     .WithName("GetWeatherForecast");
 
 var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave.sii"));
-await SiiDecoder.DecodeSii(t);
+var decodedFile = SiiDecoder.DecodeSii(t);
+
+Console.WriteLine($"decoded file has {decodedFile.Structures.Count} structure blocks!");
 
 app.Run();
 
