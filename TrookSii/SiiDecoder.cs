@@ -59,13 +59,10 @@ public static class SiiDecoder
             else
             {
                 // data block
-                Console.WriteLine("This would be a data block");
+                Console.WriteLine("This would be a data block which is unimplemented :(");
+                validBlock = false;
             }
-
-            validBlock = false;
         }
-
-        Console.WriteLine("forced quit after 1 block");
 
         return new SiiFile
         {
@@ -96,10 +93,24 @@ public static class SiiDecoder
         var structureId = sii.ReadUInt32();
         Console.WriteLine($"==> id: {structureId}");
 
-        var nameLength = (int) sii.ReadUInt32();
-        var nameBytes = sii.ReadBytes(nameLength);
-        var name = Encoding.UTF8.GetString(nameBytes);
+        var name = sii.ReadString();
         Console.WriteLine($"==> name: {name}");
+
+        var valueTypes = new List<ValueDefinition>();
+        IDictionary<uint, string>? ordinals = null;
+        var valueTypeId = sii.ReadUInt32();
+        while (valueTypeId != 0)
+        {
+            var valueName = sii.ReadString();
+            if (valueTypeId == 0x37)
+            {
+                Console.WriteLine("==> ordinal strings:");
+                ordinals = DecodeOrdinalStringList(sii, valueName);
+            }
+            valueTypes.Add(new ValueDefinition { TypeId = valueTypeId, Name = valueName });
+            Console.WriteLine($"==> field: {valueName} (type = 0x{valueTypeId:X})");
+            valueTypeId = sii.ReadUInt32();
+        }
 
         Console.WriteLine("END:   Structure block");
 
@@ -107,8 +118,24 @@ public static class SiiDecoder
         {
             Id = structureId,
             Name = name,
-            Values = []
+            Values = valueTypes,
+            OrdinalStrings = ordinals
         };
         return true;
+    }
+
+    private static IDictionary<uint, string> DecodeOrdinalStringList(SiiStream sii, string name)
+    {
+        var numStrings = sii.ReadUInt32();
+        var ordinalDict = new Dictionary<uint, string>();
+        for (uint i = 0; i < numStrings; i++)
+        {
+            var ord = sii.ReadUInt32();
+            var s = sii.ReadString();
+            Console.WriteLine($"{name}[{ord}]: {s}");
+            ordinalDict[ord] = s;
+        }
+
+        return ordinalDict;
     }
 }

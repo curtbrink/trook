@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace TrookSii;
 
 public class SiiStream(ref byte[] buffer)
@@ -24,6 +26,13 @@ public class SiiStream(ref byte[] buffer)
         var v = BitConverter.ToBoolean(_buffer, _idx);
         _idx++;
         return v;
+    }
+
+    public string ReadString()
+    {
+        var strLen = (int) ReadUInt32();
+        var b = ReadBytes(strLen);
+        return Encoding.UTF8.GetString(b);
     }
 
     public byte[] DumpRemainingBytes()

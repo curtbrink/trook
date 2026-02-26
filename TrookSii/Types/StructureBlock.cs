@@ -7,4 +7,6 @@ public class StructureBlock
     public string Name { get; init; }
     
     public IEnumerable<ValueDefinition> Values { get; init; }
+    
+    public IDictionary<uint, string>? OrdinalStrings { get; init; }
 }
