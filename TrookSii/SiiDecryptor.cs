@@ -7,6 +7,7 @@ public static class SiiDecryptor
 {
     // assumptions based on test file:
     // - encrypted + compressed ("ScsC" header)
+    // - decompressed data is a BSII file
 
     private const uint ScscHeader = 0x43736353;
     private const uint BsiiHeader = 0x49495342;
@@ -20,7 +21,7 @@ public static class SiiDecryptor
         0xc2, 0x73, 0x71, 0x56, 0x3f, 0xbf, 0x1f, 0x3c, 0x9e, 0xdf, 0x6b, 0x11, 0x82, 0x5a, 0x5d, 0x0a
     ];
     
-    public static async Task<string> DecryptScsc(byte[] scscBytes)
+    public static async Task<byte[]> DecryptScsc(byte[] scscBytes)
     {
         var idx = 0;
         
@@ -60,13 +61,6 @@ public static class SiiDecryptor
 
         Console.WriteLine($"finished decompressing, final size is {decompressed.Length}");
 
-        var decompressedHeader = BitConverter.ToUInt32(decompressed, 0);
-
-        if (decompressedHeader != BsiiHeader)
-        {
-            throw new InvalidOperationException("Given file after decompression is not a BSII file");
-        }
-
-        return "";
+        return decompressed;
     }
 }
