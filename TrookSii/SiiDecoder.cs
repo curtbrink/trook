@@ -59,8 +59,8 @@ public static class SiiDecoder
             else
             {
                 // data block
-                Console.WriteLine("This would be a data block which is unimplemented :(");
-                validBlock = false;
+                validBlock = DecodeDataBlock(sii, structureBlocks, out var block);
+                if (block != null && validBlock) dataBlocks.Add(block);
             }
         }
 
@@ -137,5 +137,30 @@ public static class SiiDecoder
         }
 
         return ordinalDict;
+    }
+
+    private static bool DecodeDataBlock(SiiStream sii, IDictionary<uint, StructureBlock> structureBlocks,
+        out DataBlock? block)
+    {
+        var structId = sii.ReadUInt32();
+        StructureBlock structure;
+        try
+        {
+            structure = structureBlocks[structId];
+        }
+        catch (KeyNotFoundException e)
+        {
+            Console.WriteLine($"Invalid structure block id: {structId}");
+            block = null;
+            return false;
+        }
+
+        Console.WriteLine($"BEGIN: Data block for structure (id={structId}, name={structure.Name})");
+
+        var dataBlockId = sii.ReadDataBlockId();
+        Console.WriteLine($"==> id: 0x{dataBlockId.Parts.First():X}");
+
+        block = null;
+        return false;
     }
 }
