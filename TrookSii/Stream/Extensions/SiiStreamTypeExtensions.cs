@@ -13,6 +13,19 @@ public static class SiiStreamTypeExtensions
         'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
         'w', 'x', 'y', 'z', '_'
     ];
+
+    public static string DecodeEncodedString(ulong enc)
+    {
+        var s = new StringBuilder("");
+        while (enc > 0)
+        {
+            var m = enc % 38;
+            s.Append(EncodedChars[m]);
+            enc /= 38;
+        }
+
+        return s.ToString();
+    }
     
     extension(SiiStream sii)
     {
@@ -26,15 +39,7 @@ public static class SiiStreamTypeExtensions
         public string ReadEncodedString()
         {
             var enc = sii.ReadUInt64();
-            var s = new StringBuilder("");
-            while (enc > 0)
-            {
-                var m = enc % 38;
-                s.Append(EncodedChars[m]);
-                enc /= 38;
-            }
-
-            return s.ToString();
+            return DecodeEncodedString(enc);
         }
         
         public BlockId ReadDataBlockId()

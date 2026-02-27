@@ -35,8 +35,12 @@ app.MapGet("/weatherforecast", () =>
     })
     .WithName("GetWeatherForecast");
 
-var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave.sii"));
+var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave_withjobs.sii"));
 var decodedFile = SiiDecoder.DecodeSii(t);
+
+// get driver ai struct and data
+var struc = decodedFile.Structures.Values.First(s => s.Name == "driver_ai");
+var datas = decodedFile.Data.Where(d => d.StructureId == struc.Id).ToList();
 
 Console.WriteLine($"decoded file has {decodedFile.Structures.Count} structure blocks!");
 

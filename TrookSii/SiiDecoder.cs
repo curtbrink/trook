@@ -110,7 +110,7 @@ public static class SiiDecoder
                 ordinals = DecodeOrdinalStringList(sii, valueName);
             }
             valueTypes.Add(new ValueDefinition { TypeId = valueTypeId, Name = valueName });
-            Console.WriteLine($"==> field: {valueName} (type = 0x{valueTypeId:X})");
+            // Console.WriteLine($"==> field: {valueName} (type = 0x{valueTypeId:X})");
             valueTypeId = sii.ReadUInt32();
         }
 
@@ -162,76 +162,77 @@ public static class SiiDecoder
         var dataBlockId = sii.ReadDataBlockId();
         Console.WriteLine($"==> id: 0x{dataBlockId.Parts.First():X}");
 
-        var allValuesParseable = true;
+        var dataValues = new List<(ValueDefinition, dynamic)>();
 
         foreach (var vd in structure.Values)
         {
+            dynamic vdValue;
             Console.WriteLine($"==> field: {vd.Name} (type = 0x{vd.TypeId:X})");
             switch (vd.TypeId)
             {
                 case 0x01:
-                    var str = sii.ReadString();
-                    Console.WriteLine($"====> string: {str}");
+                    vdValue = sii.ReadString();
+                    Console.WriteLine($"====> string: {vdValue}");
                     break;
                 case 0x02:
-                    var strs = sii.ReadStringArray();
-                    foreach (var s in strs)
+                    vdValue = sii.ReadStringArray();
+                    foreach (var s in vdValue)
                         Console.WriteLine($"====> string: {s}");
                     break;
                 case 0x03:
-                    var encStr = sii.ReadEncodedString();
-                    Console.WriteLine($"====> enc string: {encStr}");
+                    vdValue = sii.ReadEncodedString();
+                    Console.WriteLine($"====> enc string: {vdValue}");
                     break;
                 case 0x04:
-                    var encStrs = sii.ReadEncodedStringArray();
-                    foreach (var s in encStrs)
+                    vdValue = sii.ReadEncodedStringArray();
+                    foreach (var s in vdValue)
                         Console.WriteLine($"====> enc string: {s}");
                     break;
                 case 0x05:
-                    var f = sii.ReadFloat();
-                    Console.WriteLine($"====> float: {f}");
+                    vdValue = sii.ReadFloat();
+                    Console.WriteLine($"====> float: {vdValue}");
                     break;
                 case 0x06:
-                    var fs = sii.ReadFloatArray();
-                    foreach (var sf in fs)
+                    vdValue = sii.ReadFloatArray();
+                    foreach (var sf in vdValue)
                         Console.WriteLine($"====> float: {sf}");
                     break;
                 case 0x07:
-                    var twoFloats = sii.ReadVec2S();
-                    Console.WriteLine($"====> vec2floats: [{twoFloats[0]}, {twoFloats[1]}]");
+                    vdValue = sii.ReadVec2S();
+                    Console.WriteLine($"====> vec2floats: [{vdValue[0]}, {vdValue[1]}]");
                     break;
                 case 0x09:
-                    var threeFloats = sii.ReadVec3S();
-                    Console.WriteLine($"====> vec3floats: [{threeFloats[0]}, {threeFloats[1]}, {threeFloats[2]}]");
+                    vdValue = sii.ReadVec3S();
+                    Console.WriteLine($"====> vec3floats: [{vdValue[0]}, {vdValue[1]}, {vdValue[2]}]");
                     break;
                 case 0x11:
-                    var v3 = sii.ReadVec3I();
-                    foreach (var v in v3)
+                    vdValue = sii.ReadVec3I();
+                    foreach (var v in vdValue)
                         Console.WriteLine($"====> int: {v}");
                     break;
                 case 0x12:
-                    var vec3a = sii.ReadVec3IArray();
-                    foreach (var vec3 in vec3a)
+                    vdValue = sii.ReadVec3IArray();
+                    foreach (var vec3 in vdValue)
                         Console.WriteLine($"====> vec3: [{vec3[0]}, {vec3[1]}, {vec3[2]}]");
                     break;
                 case 0x18:
-                    var vec4sa = sii.ReadVec4SArray();
-                    foreach (var vec4a in vec4sa)
+                    vdValue = sii.ReadVec4SArray();
+                    foreach (var vec4A in vdValue)
                     {
                         Console.WriteLine("====> vec4s array:");
-                        foreach (var vec4 in vec4a)
+                        foreach (var vec4 in vec4A)
                             Console.WriteLine($"======> float: {vec4}");
                     }
 
                     break;
                 case 0x19:
-                    var weirdFloats = sii.ReadVec8S();
-                    foreach (var weirdFloat in weirdFloats)
+                    vdValue = sii.ReadVec8S();
+                    foreach (var weirdFloat in vdValue)
                         Console.WriteLine($"====> biased float: {weirdFloat}");
                     break;
                 case 0x1a:
-                    var weirdFloatArray = sii.ReadVec8SArray();
-                    foreach (var wfa in weirdFloatArray)
+                    vdValue = sii.ReadVec8SArray();
+                    foreach (var wfa in vdValue)
                     {
                         Console.WriteLine($"====> weird float array:");
                         foreach (var wfa2 in wfa)
@@ -240,80 +241,80 @@ public static class SiiDecoder
 
                     break;
                 case 0x25:
-                    var i = sii.ReadInt32();
-                    Console.WriteLine($"====> int: {i}");
+                    vdValue = sii.ReadInt32();
+                    Console.WriteLine($"====> int: {vdValue}");
                     break;
                 case 0x26:
-                    var sia = sii.ReadInt32Array();
-                    foreach (var s in sia)
+                    vdValue = sii.ReadInt32Array();
+                    foreach (var s in vdValue)
                         Console.WriteLine($"====> int: {s}");
                     break;
                 case 0x27:
-                    var n = sii.ReadUInt32();
-                    Console.WriteLine($"====> uint: {n}");
+                    vdValue = sii.ReadUInt32();
+                    Console.WriteLine($"====> uint: {vdValue}");
                     break;
                 case 0x28:
-                    var ns = sii.ReadUInt32Array();
-                    foreach (var nsv in ns)
-                        Console.WriteLine($"====> uint: {nsv}");
+                    vdValue = sii.ReadUInt32Array();
+                    foreach (var nsv in vdValue)
+                        Console.WriteLine($"====> uint: {vdValue}");
                     break;
                 case 0x2b:
-                    var singleUs = sii.ReadUInt16();
-                    Console.WriteLine($"====> ushort: {singleUs}");
+                    vdValue = sii.ReadUInt16();
+                    Console.WriteLine($"====> ushort: {vdValue}");
                     break;
                 case 0x2c:
-                    var usa = sii.ReadUInt16Array();
-                    foreach (var us in usa)
+                    vdValue = sii.ReadUInt16Array();
+                    foreach (var us in vdValue)
                         Console.WriteLine($"====> ushort: {us}");
                     break;
                 case 0x2f:
-                    var ui = sii.ReadUInt32();
-                    Console.WriteLine($"====> uint: {ui}");
+                    vdValue = sii.ReadUInt32();
+                    Console.WriteLine($"====> uint: {vdValue}");
                     break;
                 case 0x31:
-                    var l = sii.ReadInt64();
-                    Console.WriteLine($"====> long: {l}");
+                    vdValue = sii.ReadInt64();
+                    Console.WriteLine($"====> long: {vdValue}");
                     break;
                 case 0x32:
-                    var sl = sii.ReadInt64Array();
-                    foreach (var slv in sl)
+                    vdValue = sii.ReadInt64Array();
+                    foreach (var slv in vdValue)
                         Console.WriteLine($"====> long: {slv}");
                     break;
                 case 0x33:
-                    var ul = sii.ReadUInt64();
-                    Console.WriteLine($"====> ulong: {ul}");
+                    vdValue = sii.ReadUInt64();
+                    Console.WriteLine($"====> ulong: {vdValue}");
                     break;
                 case 0x34:
-                    var uls = sii.ReadUInt64Array();
-                    foreach (var ui64 in uls)
+                    vdValue = sii.ReadUInt64Array();
+                    foreach (var ui64 in vdValue)
                         Console.WriteLine($"====> ulong: {ui64}");
                     break;
                 case 0x35:
-                    var bo = sii.ReadBool();
-                    Console.WriteLine($"====> bool: {bo}");
+                    vdValue = sii.ReadBool();
+                    Console.WriteLine($"====> bool: {vdValue}");
                     break;
                 case 0x36:
-                    var boa = sii.ReadBoolArray();
-                    foreach (var b in boa)
+                    vdValue = sii.ReadBoolArray();
+                    foreach (var b in vdValue)
                         Console.WriteLine($"====> bool: {b}");
                     break;
                 case 0x37:
                     // ordinal strings on the comeback
                     var ordIdx = sii.ReadUInt32();
-                    var ordS = structure.OrdinalStrings?[ordIdx] ?? "";
-                    Console.WriteLine($"====> ordinal string: {ordS}");
+                    vdValue = structure.OrdinalStrings?[ordIdx] ?? "";
+                    Console.WriteLine($"====> ordinal string: {vdValue}");
                     break;
                 case 0x39:
                 case 0x3b:
                 case 0x3d:
-                    var bId = sii.ReadDataBlockId();
-                    foreach (var b in bId.Parts)
+                    vdValue = sii.ReadDataBlockId();
+                    foreach (var b in vdValue.Parts)
                         Console.WriteLine($"====> block id: 0x{b:X}");
                     break;
                 case 0x3a:
                 case 0x3c:
-                    var bIds = sii.ReadDataBlockIdArray();
-                    foreach (var b in bIds)
+                    vdValue = sii.ReadDataBlockIdArray();
+                    foreach (var b in vdValue)
                     {
                         Console.WriteLine("====> block list:");
                         foreach (var p in b.Parts)
@@ -324,22 +325,18 @@ public static class SiiDecoder
 
                     break;
                 default:
-                    allValuesParseable = false;
-                    break;
+                    throw new InvalidOperationException($"Unknown data type! 0x{vd.TypeId:X}");
             }
 
-            if (!allValuesParseable)
-            {
-                break;
-            }
+            dataValues.Add((vd, vdValue));
         }
 
-        if (!allValuesParseable)
+        block = new DataBlock
         {
-            Console.WriteLine("Missing types :(");
-        }
-        
-        block = null;
-        return allValuesParseable;
+            StructureId = structure.Id,
+            BlockId = dataBlockId,
+            Data = dataValues
+        };
+        return true;
     }
 }
