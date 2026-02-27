@@ -4,5 +4,5 @@ public class BlockId
 {
     public byte Length { get; init; }
     
-    public IEnumerable<ulong> Parts { get; init; }
+    public IList<ulong> Parts { get; init; }
 }

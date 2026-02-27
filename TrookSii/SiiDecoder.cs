@@ -1,4 +1,6 @@
 using System.Text;
+using TrookSii.Stream;
+using TrookSii.Stream.Extensions;
 using TrookSii.Types;
 
 namespace TrookSii;
@@ -81,7 +83,7 @@ public static class SiiDecoder
             throw new InvalidOperationException($"Not a structure block! expected type=0, got type={blockType}");
         }
 
-        var validity = sii.ReadBoolByte();
+        var validity = sii.ReadBool();
         if (!validity)
         {
             block = null;
@@ -195,15 +197,15 @@ public static class SiiDecoder
                         Console.WriteLine($"====> float: {sf}");
                     break;
                 case 0x07:
-                    var twoFloats = sii.ReadFloats(2);
+                    var twoFloats = sii.ReadVec2S();
                     Console.WriteLine($"====> vec2floats: [{twoFloats[0]}, {twoFloats[1]}]");
                     break;
                 case 0x09:
-                    var threeFloats = sii.ReadFloats(3);
+                    var threeFloats = sii.ReadVec3S();
                     Console.WriteLine($"====> vec3floats: [{threeFloats[0]}, {threeFloats[1]}, {threeFloats[2]}]");
                     break;
                 case 0x11:
-                    var v3 = sii.ReadInt32s(3);
+                    var v3 = sii.ReadVec3I();
                     foreach (var v in v3)
                         Console.WriteLine($"====> int: {v}");
                     break;
@@ -223,12 +225,12 @@ public static class SiiDecoder
 
                     break;
                 case 0x19:
-                    var weirdFloats = sii.ReadBiasedFloats();
+                    var weirdFloats = sii.ReadVec8S();
                     foreach (var weirdFloat in weirdFloats)
                         Console.WriteLine($"====> biased float: {weirdFloat}");
                     break;
                 case 0x1a:
-                    var weirdFloatArray = sii.ReadBiasedFloatsArray();
+                    var weirdFloatArray = sii.ReadVec8SArray();
                     foreach (var wfa in weirdFloatArray)
                     {
                         Console.WriteLine($"====> weird float array:");
@@ -287,11 +289,11 @@ public static class SiiDecoder
                         Console.WriteLine($"====> ulong: {ui64}");
                     break;
                 case 0x35:
-                    var bo = sii.ReadBoolByte();
+                    var bo = sii.ReadBool();
                     Console.WriteLine($"====> bool: {bo}");
                     break;
                 case 0x36:
-                    var boa = sii.ReadBoolByteArray();
+                    var boa = sii.ReadBoolArray();
                     foreach (var b in boa)
                         Console.WriteLine($"====> bool: {b}");
                     break;

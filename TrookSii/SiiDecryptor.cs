@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Security.Cryptography;
+using TrookSii.Stream;
 
 namespace TrookSii;
 

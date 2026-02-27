@@ -6,5 +6,5 @@ public class DataBlock
     
     public BlockId BlockId { get; init; }
     
-    public IEnumerable<byte[]> Data { get; init; }
+    public IList<(ValueDefinition, dynamic)> Data { get; init; }
 }

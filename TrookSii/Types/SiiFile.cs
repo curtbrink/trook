@@ -8,5 +8,5 @@ public class SiiFile
     
     public IDictionary<uint, StructureBlock> Structures { get; init; }
     
-    public IEnumerable<DataBlock> Data { get; init; }
+    public IList<DataBlock> Data { get; init; }
 }
