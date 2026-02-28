@@ -151,9 +151,9 @@ public static class SiiStreamReadNExtensions
             return v;
         }
 
-        public BlockId[] ReadNDataBlockId(int n)
+        public string[] ReadNDataBlockId(int n)
         {
-            var v = new BlockId[n];
+            var v = new string[n];
             for (var i = 0; i < n; i++)
             {
                 v[i] = sii.ReadDataBlockId();

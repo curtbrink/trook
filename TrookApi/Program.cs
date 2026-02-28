@@ -39,23 +39,8 @@ app.MapGet("/weatherforecast", () =>
 var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave_withjobs.sii"));
 var decodedFile = SiiDecoder.DecodeSii(t);
 
-// sort blocks into structures
-var dict = new Dictionary<uint, List<DataBlock>>();
-foreach (var db in decodedFile.Data)
-{
-    if (!dict.ContainsKey(db.StructureId))
-        dict[db.StructureId] = [];
-
-    dict[db.StructureId].Add(db);
-}
-
-foreach (var k in dict.Keys)
-{
-    var s = decodedFile.Structures[k];
-    Console.WriteLine($"Structure block '{s.Name}' accounts for {dict[k].Count} data blocks");
-}
-
 Console.WriteLine($"decoded file has {decodedFile.Structures.Count} structure blocks!");
+Console.WriteLine($"decoded file has {decodedFile.Data.Count} data blocks!");
 
 app.Run();
 

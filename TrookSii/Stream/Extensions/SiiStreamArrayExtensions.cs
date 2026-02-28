@@ -84,7 +84,7 @@ public static class SiiStreamArrayExtensions
             return sii.ReadNEncodedString(len);
         }
 
-        public BlockId[] ReadDataBlockIdArray()
+        public string[] ReadDataBlockIdArray()
         {
             var len = (int)sii.ReadUInt32();
             return sii.ReadNDataBlockId(len);

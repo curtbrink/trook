@@ -41,18 +41,25 @@ public static class SiiStreamTypeExtensions
             return DecodeEncodedString(enc);
         }
         
-        public BlockId ReadDataBlockId()
+        public string ReadDataBlockId()
         {
             var len = sii.ReadBytes(1).Single();
-            var isNameless = len == 255;
-            var partsToRead = isNameless ? 1 : len;
-            List<ulong> parts = [];
-            for (var i = 0; i < partsToRead; i++)
+
+            if (len == 255)
             {
-                parts.Add(sii.ReadUInt64());
+                var id = sii.ReadUInt64();
+                return $"_nameless.{id:X}";
+            }
+            
+            List<string> parts = [];
+            for (var i = 0; i < len; i++)
+            {
+                var part = sii.ReadUInt64();
+                var partStr = DecodeEncodedString(part);
+                parts.Add(partStr);
             }
 
-            return new BlockId { Length = len, Parts = parts };
+            return string.Join(".", parts);
         }
         
         public float[] ReadVec8S()

@@ -6,7 +6,7 @@ public class SiiFile
     
     public uint Version { get; init; }
     
-    public IDictionary<uint, StructureBlock> Structures { get; init; }
+    public IList<StructureBlock> Structures { get; init; }
     
     public IList<DataBlock> Data { get; init; }
 }

@@ -71,7 +71,7 @@ public static class SiiDecoder
             Signature = header,
             Version = version,
             Data = dataBlocks,
-            Structures = structureBlocks
+            Structures = structureBlocks.Values.ToList()
         };
     }
 
@@ -163,7 +163,7 @@ public static class SiiDecoder
         logger?.LogInformation($"BEGIN: Data block for structure (id={structId}, name={structure.Name})");
 
         var dataBlockId = sii.ReadDataBlockId();
-        logger?.LogInformation($"==> id: 0x{dataBlockId.Parts.First():X}");
+        logger?.LogInformation($"==> id: {dataBlockId}");
 
         var dataValues = new List<(ValueDefinition, dynamic)>();
 
@@ -311,21 +311,13 @@ public static class SiiDecoder
                 case 0x3b:
                 case 0x3d:
                     vdValue = sii.ReadDataBlockId();
-                    foreach (var b in vdValue.Parts)
-                        logger?.LogInformation($"====> block id: 0x{b:X}");
+                    logger?.LogInformation($"====> block id: {vdValue}");
                     break;
                 case 0x3a:
                 case 0x3c:
                     vdValue = sii.ReadDataBlockIdArray();
                     foreach (var b in vdValue)
-                    {
-                        logger?.LogInformation("====> block list:");
-                        foreach (var p in b.Parts)
-                        {
-                            logger?.LogInformation($"======> id: 0x{p:X}");
-                        }
-                    }
-
+                        logger?.LogInformation($"====> block list: {b}");
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown data type! 0x{vd.TypeId:X}");

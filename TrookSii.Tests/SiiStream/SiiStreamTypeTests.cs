@@ -58,9 +58,7 @@ public class SiiStreamTypeTests
 
         var id = s.ReadDataBlockId();
 
-        Assert.Equal(255, id.Length);
-        Assert.Single(id.Parts);
-        Assert.Equal("_nameless.123456789ABCDEF0", id.DisplayName);
+        Assert.Equal("_nameless.123456789ABCDEF0", id);
     }
     
     [Fact]
@@ -82,8 +80,7 @@ public class SiiStreamTypeTests
 
         var id = s.ReadDataBlockId();
 
-        Assert.Equal(4, id.Length);
-        Assert.Equal("my.name.is.foobarbaz", id.DisplayName);
+        Assert.Equal("my.name.is.foobarbaz", id);
     }
 
     [Fact]
