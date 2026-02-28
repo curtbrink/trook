@@ -1,4 +1,3 @@
-
 namespace TrookSii.Stream;
 
 public class SiiStream(ref byte[] buffer)

@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using System.Text;
 using TrookSii.Types;
 
@@ -6,7 +5,7 @@ namespace TrookSii.Stream.Extensions;
 
 public static class SiiStreamTypeExtensions
 {
-    private static readonly char[] EncodedChars =
+    public static readonly char[] EncodedChars =
     [ // "@" is index 0 and is unused.
         '@', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
