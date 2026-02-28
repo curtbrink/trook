@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 using TrookSii.Stream;
 
 namespace TrookSii;
@@ -21,7 +22,7 @@ public static class SiiDecryptor
         0xc2, 0x73, 0x71, 0x56, 0x3f, 0xbf, 0x1f, 0x3c, 0x9e, 0xdf, 0x6b, 0x11, 0x82, 0x5a, 0x5d, 0x0a
     ];
     
-    public static async Task<byte[]> DecryptScsc(byte[] scscBytes)
+    public static async Task<byte[]> DecryptScsc(byte[] scscBytes, ILogger<SiiStream>? logger = null)
     {
         var sii = new SiiStream(ref scscBytes);
         
@@ -46,8 +47,8 @@ public static class SiiDecryptor
         var decryptor = aes.CreateDecryptor();
         var decryptedData = decryptor.TransformFinalBlock(data, 0, data.Length);
 
-        Console.WriteLine($"nominal data size is {dataSize}");
-        Console.WriteLine($"decrypted compressed data size is {decryptedData.Length}");
+        logger?.LogInformation($"nominal data size is {dataSize}");
+        logger?.LogInformation($"decrypted compressed data size is {decryptedData.Length}");
         
         // decompress
         var zIn = new MemoryStream(decryptedData);
@@ -56,7 +57,7 @@ public static class SiiDecryptor
         await z.CopyToAsync(zOut);
         var decompressed = zOut.ToArray();
 
-        Console.WriteLine($"finished decompressing, final size is {decompressed.Length}");
+        logger?.LogInformation($"finished decompressing, final size is {decompressed.Length}");
 
         return decompressed;
     }
