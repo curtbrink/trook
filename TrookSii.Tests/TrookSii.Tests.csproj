@@ -22,4 +22,13 @@
       <ProjectReference Include="..\TrookSii\TrookSii.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="testsave.sii">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="testsave_withjobs.sii">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
