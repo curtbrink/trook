@@ -1,5 +1,6 @@
-using TrookApi.Mappings;
 using TrookSii;
+using TrookSii.Types.Mappings;
+using TrookSii.Types.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,4 +30,5 @@ var profitLogEntries = decodedFile.Data.Where(db => db.StructureId == 15).ToList
 foreach (var entry in profitLogEntries)
 {
     var v = entry.ToProfitLogEntry();
+    Console.WriteLine($"entry: {v.SourceCity} => {v.DestinationCity}");
 }

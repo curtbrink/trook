@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using TrookSii.Stream;
 using TrookSii.Stream.Extensions;
 using TrookSii.Types;
+using TrookSii.Types.Raw;
 
 namespace TrookSii;
 

@@ -1,11 +1,9 @@
-using TrookApi.Mappings;
+using TrookSii.Types.Mappings;
 
-namespace TrookApi.Domain;
+namespace TrookSii.Types.Models;
 
 public class ProfitLogEntry
 {
-    public const int StructId = 15;
-    
     [Sii("revenue")]
     public long Revenue { get; set; }
     

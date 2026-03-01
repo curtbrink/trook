@@ -1,8 +1,8 @@
 using System.Reflection;
-using TrookApi.Domain;
-using TrookSii.Types;
+using TrookSii.Types.Models;
+using TrookSii.Types.Raw;
 
-namespace TrookApi.Mappings;
+namespace TrookSii.Types.Mappings;
 
 public static class DataBlockExtensions
 {
@@ -10,7 +10,7 @@ public static class DataBlockExtensions
     {
         public ProfitLogEntry ToProfitLogEntry()
         {
-            if (dataBlock.StructureId != ProfitLogEntry.StructId)
+            if (dataBlock.StructureId != 15)
                 throw new InvalidOperationException("Data block is not a ProfitLogEntry");
 
             var returnVal = new ProfitLogEntry();
