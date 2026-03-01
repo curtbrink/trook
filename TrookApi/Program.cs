@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using TrookSii;
 using TrookSii.Types.Mappings;
 using TrookSii.Types.Models;
@@ -20,15 +21,11 @@ app.UseHttpsRedirection();
 
 // ============== do stuff
 
+var clock = Stopwatch.StartNew();
 var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave_withjobs.sii"));
 var decodedFile = SiiDecoder.DecodeSii(t);
+clock.Stop();
+Console.WriteLine($"Decryption, decompression, and decoding completed in {clock.ElapsedMilliseconds} ms");
 
 Console.WriteLine($"decoded file has {decodedFile.Structures.Count} structure blocks!");
 Console.WriteLine($"decoded file has {decodedFile.Data.Count} data blocks!");
-
-var profitLogEntries = decodedFile.Data.Where(db => db.StructureId == 14).ToList();
-foreach (var entry in profitLogEntries)
-{
-    var profitLog = entry.ToProfitLog();
-    var foo = true;
-}

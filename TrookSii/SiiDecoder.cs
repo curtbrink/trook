@@ -215,16 +215,7 @@ public static class SiiDecoder
             if (!targetHasPropForDefinition || targetProp is null) continue;
 
             var vdValue = sii.GetValueForDefinition(vd, structure, logger);
-            
-            // special case
-            if (targetProp.PropertyType == typeof(string) && vdValue is EncodedString es)
-            {
-                targetProp.SetValue(target, es.ToString());
-            }
-            else
-            {
-                targetProp.SetValue(target, vdValue);
-            }
+            targetProp.SetValue(target, vdValue);
         }
 
         return target;

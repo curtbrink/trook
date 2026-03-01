@@ -27,19 +27,19 @@ public class ProfitLogEntry(BlockId blockId) : BaseSii(blockId)
     public uint CargoCount { get; set; }
 
     [Sii("cargo")]
-    public string Cargo { get; set; } = "";
+    public EncodedString Cargo { get; set; }
 
     [Sii("source_city")]
-    public string SourceCity { get; set; } = "";
+    public EncodedString SourceCity { get; set; }
     
     [Sii("source_company")]
-    public string SourceCompany { get; set; } = "";
+    public EncodedString SourceCompany { get; set; }
     
     [Sii("destination_city")]
-    public string DestinationCity { get; set; } = "";
+    public EncodedString DestinationCity { get; set; }
     
     [Sii("destination_company")]
-    public string DestinationCompany { get; set; } = "";
+    public EncodedString DestinationCompany { get; set; }
     
     [Sii("timestamp_day")]
     public uint TimestampDay { get; set; }
