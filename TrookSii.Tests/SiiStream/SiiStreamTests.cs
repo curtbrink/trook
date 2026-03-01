@@ -1,6 +1,4 @@
-﻿using TrookSii.Stream;
-
-namespace TrookSii.Tests;
+﻿namespace TrookSii.Tests.SiiStream;
 
 public class SiiStreamTests
 {
@@ -8,7 +6,7 @@ public class SiiStreamTests
     public void SiiStream_ReadBytesAndDumpBytesTests()
     {
         byte[] bytes = [0xFF, 0x01, 0xFE, 0x02];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var firstTwo = s.ReadBytes(2);
         Assert.Equal(2, firstTwo.Length);
@@ -25,7 +23,7 @@ public class SiiStreamTests
     public void SiiStream_ReadBoolTests()
     {
         byte[] bytes = [0x00, 0x01, 0x00, 0x00, 0x05];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b = new bool[5];
         for (var i = 0; i < 5; i++)
@@ -47,7 +45,7 @@ public class SiiStreamTests
         const float f2 = 763.1234f;
 
         byte[] bytes = [0x2D, 0xB2, 0xB5, 0x40, 0xE6, 0xC7, 0x3E, 0x44];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadFloat();
         var b2 = s.ReadFloat();
@@ -63,7 +61,7 @@ public class SiiStreamTests
         const ushort us2 = 9812;
 
         byte[] bytes = [0x14, 0x86, 0x54, 0x26];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadUInt16();
         var b2 = s.ReadUInt16();
@@ -79,7 +77,7 @@ public class SiiStreamTests
         const uint ui2 = 2144972974;
 
         byte[] bytes = [0x3D, 0x2F, 0x0F, 0x39, 0xAE, 0xB0, 0xD9, 0x7F];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadUInt32();
         var b2 = s.ReadUInt32();
@@ -99,7 +97,7 @@ public class SiiStreamTests
             0x6B, 0x5D, 0xE4, 0xEB, 0x20, 0xC4, 0x79, 0x6F,
             0x35, 0xB9, 0xDE, 0xF4, 0x27, 0xDD, 0x7F, 0x25
         ];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadUInt64();
         var b2 = s.ReadUInt64();
@@ -115,7 +113,7 @@ public class SiiStreamTests
         const int i2 = -1937059162;
 
         byte[] bytes = [0x66, 0x4B, 0xE9, 0x30, 0xA6, 0xD2, 0x8A, 0x8C];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadInt32();
         var b2 = s.ReadInt32();
@@ -135,7 +133,7 @@ public class SiiStreamTests
             0x2F, 0xC9, 0xF6, 0x29, 0xA7, 0x5B, 0x0C, 0xD5,
             0xDE, 0x56, 0x0F, 0x68, 0x0D, 0xAE, 0x94, 0x73
         ];
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var b1 = s.ReadInt64();
         var b2 = s.ReadInt64();

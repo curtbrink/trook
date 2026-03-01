@@ -1,7 +1,6 @@
-using TrookSii.Stream;
 using TrookSii.Stream.Extensions;
 
-namespace TrookSii.Tests;
+namespace TrookSii.Tests.SiiStream;
 
 public class SiiStreamArrayTests
 {
@@ -11,7 +10,7 @@ public class SiiStreamArrayTests
         bool[] bs = [true, true, false, true, false];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadBoolArray();
         Assert.Equal(5, bArray.Length);
@@ -27,7 +26,7 @@ public class SiiStreamArrayTests
         float[] bs = [1.234f, 0.1f, 876f, 34.56f, 0.00001f];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadFloatArray();
         Assert.Equal(5, bArray.Length);
@@ -43,7 +42,7 @@ public class SiiStreamArrayTests
         ushort[] bs = [2, 45, 1, 32, 200];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadUInt16Array();
         Assert.Equal(5, bArray.Length);
@@ -59,7 +58,7 @@ public class SiiStreamArrayTests
         uint[] bs = [2, 45, 1, 32, 200];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadUInt32Array();
         Assert.Equal(5, bArray.Length);
@@ -75,7 +74,7 @@ public class SiiStreamArrayTests
         ulong[] bs = [2, 45, 1, 32, 200];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadUInt64Array();
         Assert.Equal(5, bArray.Length);
@@ -91,7 +90,7 @@ public class SiiStreamArrayTests
         int[] bs = [2, 45, 1, 32, 200];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadInt32Array();
         Assert.Equal(5, bArray.Length);
@@ -107,7 +106,7 @@ public class SiiStreamArrayTests
         long[] bs = [2, 45, 1, 32, 200];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadInt64Array();
         Assert.Equal(5, bArray.Length);
@@ -125,7 +124,7 @@ public class SiiStreamArrayTests
         int[][] bs = [[2, 45, 1], [32, 200, 0]];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadVec3IArray();
         Assert.Equal(2, bArray.Length);
@@ -144,7 +143,7 @@ public class SiiStreamArrayTests
         float[][] bs = [[2f, 45f, 200f], [32f, 200f, 0f]];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadVec3SArray();
         Assert.Equal(2, bArray.Length);
@@ -163,7 +162,7 @@ public class SiiStreamArrayTests
         float[][] bs = [[2f, 45f, 200f, 657f], [32f, 200f, 0f, 12345f]];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadVec4SArray();
         Assert.Equal(2, bArray.Length);
@@ -184,7 +183,7 @@ public class SiiStreamArrayTests
         float[][] bs = [f1A, f2A];
         var bytes = TypeHelpers.EncodeArray(bs);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
         var bArray = s.ReadVec8SArray();
         Assert.Equal(2, bArray.Length);

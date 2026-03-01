@@ -1,4 +1,5 @@
 using TrookSii.Types;
+using TrookSii.Types.Raw;
 
 namespace TrookSii.Stream.Extensions;
 
@@ -78,13 +79,13 @@ public static class SiiStreamArrayExtensions
             return sii.ReadNString(len);
         }
 
-        public string[] ReadEncodedStringArray()
+        public EncodedString[] ReadEncodedStringArray()
         {
             var len = (int)sii.ReadUInt32();
             return sii.ReadNEncodedString(len);
         }
 
-        public string[] ReadDataBlockIdArray()
+        public BlockId[] ReadDataBlockIdArray()
         {
             var len = (int)sii.ReadUInt32();
             return sii.ReadNDataBlockId(len);

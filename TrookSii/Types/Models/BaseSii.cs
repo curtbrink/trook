@@ -1,6 +1,8 @@
+using TrookSii.Types.Raw;
+
 namespace TrookSii.Types.Models;
 
-public abstract class BaseSii
+public abstract class BaseSii(BlockId blockId)
 {
-    public abstract int StructId { get; }
+    public BlockId BlockId => blockId;
 }

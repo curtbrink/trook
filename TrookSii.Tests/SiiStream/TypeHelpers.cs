@@ -1,12 +1,13 @@
 using System.Text;
 using TrookSii.Stream.Extensions;
+using TrookSii.Types.Raw;
 
-namespace TrookSii.Tests;
+namespace TrookSii.Tests.SiiStream;
 
 // util records for encoding arrays. not used directly
 record EncString(string S);
 
-public class TypeHelpers
+public static class TypeHelpers
 {
     public static ulong EncodeString(string s)
     {
@@ -14,7 +15,7 @@ public class TypeHelpers
 
         for (var i = s.Length - 1; i >= 0; i--)
         {
-            var cIdx = SiiStreamTypeExtensions.EncodedChars.IndexOf(s[i]);
+            var cIdx = EncodedString.CharacterMap.IndexOf(s[i]);
             if (cIdx is < 1 or > 37)
                 throw new ArgumentOutOfRangeException(nameof(s), $"Invalid char '{s[i]}' in string");
             encoded *= 38L;

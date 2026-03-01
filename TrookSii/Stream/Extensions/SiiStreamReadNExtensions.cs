@@ -1,6 +1,5 @@
 // ReSharper disable InconsistentNaming
-
-using TrookSii.Types;
+using TrookSii.Types.Raw;
 
 namespace TrookSii.Stream.Extensions;
 
@@ -140,9 +139,9 @@ public static class SiiStreamReadNExtensions
             return v;
         }
         
-        public string[] ReadNEncodedString(int n)
+        public EncodedString[] ReadNEncodedString(int n)
         {
-            var v = new string[n];
+            var v = new EncodedString[n];
             for (var i = 0; i < n; i++)
             {
                 v[i] = sii.ReadEncodedString();
@@ -151,9 +150,9 @@ public static class SiiStreamReadNExtensions
             return v;
         }
 
-        public string[] ReadNDataBlockId(int n)
+        public BlockId[] ReadNDataBlockId(int n)
         {
-            var v = new string[n];
+            var v = new BlockId[n];
             for (var i = 0; i < n; i++)
             {
                 v[i] = sii.ReadDataBlockId();

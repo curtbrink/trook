@@ -26,9 +26,9 @@ var decodedFile = SiiDecoder.DecodeSii(t);
 Console.WriteLine($"decoded file has {decodedFile.Structures.Count} structure blocks!");
 Console.WriteLine($"decoded file has {decodedFile.Data.Count} data blocks!");
 
-var profitLogEntries = decodedFile.Data.Where(db => db.StructureId == 15).ToList();
+var profitLogEntries = decodedFile.Data.Where(db => db.StructureId == 14).ToList();
 foreach (var entry in profitLogEntries)
 {
-    var v = entry.ToProfitLogEntry();
-    Console.WriteLine($"entry: {v.SourceCity} => {v.DestinationCity}");
+    var profitLog = entry.ToProfitLog();
+    var foo = true;
 }

@@ -1,8 +1,9 @@
 using TrookSii.Types.Mappings;
+using TrookSii.Types.Raw;
 
 namespace TrookSii.Types.Models;
 
-public class ProfitLogEntry
+public class ProfitLogEntry(BlockId blockId) : BaseSii(blockId)
 {
     [Sii("revenue")]
     public long Revenue { get; set; }

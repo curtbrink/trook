@@ -1,8 +1,6 @@
-using System.Text;
-using TrookSii.Stream;
 using TrookSii.Stream.Extensions;
 
-namespace TrookSii.Tests;
+namespace TrookSii.Tests.SiiStream;
 
 public class SiiStreamTypeTests
 {
@@ -18,14 +16,15 @@ public class SiiStreamTypeTests
         var encoded = TypeHelpers.EncodeString(testStr);
         var bytes = BitConverter.GetBytes(encoded);
 
-        var s = new SiiStream(ref bytes);
+        var s = new Stream.SiiStream(ref bytes);
 
-        var decoded = s.ReadEncodedString();
-
-        if (isValid)
-            Assert.Equal(testStr, decoded);
+        if (!isValid)
+            Assert.Throws<ArgumentOutOfRangeException>(() => s.ReadEncodedString());
         else
-            Assert.NotEqual(testStr, decoded);
+        {
+            var decoded = s.ReadEncodedString();
+            Assert.Equal(testStr, decoded.ToString());
+        }
     }
     
     [Theory]
@@ -39,7 +38,7 @@ public class SiiStreamTypeTests
     {
         var encoded = TypeHelpers.EncodeUtf8String(testStr);
 
-        var s = new SiiStream(ref encoded);
+        var s = new Stream.SiiStream(ref encoded);
 
         var decoded = s.ReadString();
 
@@ -54,11 +53,22 @@ public class SiiStreamTypeTests
         var nameBytes = BitConverter.GetBytes(namePart);
         byte[] idBytes = [len, ..nameBytes];
 
-        var s = new SiiStream(ref idBytes);
+        var s = new Stream.SiiStream(ref idBytes);
 
         var id = s.ReadDataBlockId();
 
-        Assert.Equal("_nameless.123456789ABCDEF0", id);
+        Assert.Equal("_nameless.123456789ABCDEF0", id.Key);
+    }
+
+    [Fact]
+    public void SiiStream_DataBlockId_NullTests()
+    {
+        byte[] bytes = [0x00];
+        var s = new Stream.SiiStream(ref bytes);
+
+        var id = s.ReadDataBlockId();
+
+        Assert.True(id.IsEmpty);
     }
     
     [Fact]
@@ -76,11 +86,11 @@ public class SiiStreamTypeTests
         }
 
         var b = blockIdBytes.ToArray();
-        var s = new SiiStream(ref b);
+        var s = new Stream.SiiStream(ref b);
 
         var id = s.ReadDataBlockId();
 
-        Assert.Equal("my.name.is.foobarbaz", id);
+        Assert.Equal("my.name.is.foobarbaz", id.Key);
     }
 
     [Fact]
@@ -95,7 +105,7 @@ public class SiiStreamTypeTests
         }
 
         var b = fBytes.ToArray();
-        var s = new SiiStream(ref b);
+        var s = new Stream.SiiStream(ref b);
 
         var vec8S = s.ReadVec8S();
 

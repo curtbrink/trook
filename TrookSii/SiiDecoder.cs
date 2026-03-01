@@ -164,6 +164,9 @@ public static class SiiDecoder
         logger?.LogInformation($"BEGIN: Data block for structure (id={structId}, name={structure.Name})");
 
         var dataBlockId = sii.ReadDataBlockId();
+        if (dataBlockId.IsEmpty)
+            throw new InvalidOperationException("Data block has invalid id!");
+
         logger?.LogInformation($"==> id: {dataBlockId}");
 
         var dataValues = new List<(ValueDefinition, dynamic)>();

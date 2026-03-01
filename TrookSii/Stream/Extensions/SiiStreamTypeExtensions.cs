@@ -1,31 +1,10 @@
 using System.Text;
-using TrookSii.Types;
+using TrookSii.Types.Raw;
 
 namespace TrookSii.Stream.Extensions;
 
 public static class SiiStreamTypeExtensions
 {
-    public static readonly char[] EncodedChars =
-    [ // "@" is index 0 and is unused.
-        '@', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-        'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-        'w', 'x', 'y', 'z', '_'
-    ];
-
-    public static string DecodeEncodedString(ulong enc)
-    {
-        var s = new StringBuilder("");
-        while (enc > 0)
-        {
-            var m = enc % 38;
-            s.Append(EncodedChars[m]);
-            enc /= 38;
-        }
-
-        return s.ToString();
-    }
-    
     extension(SiiStream sii)
     {
         public string ReadString()
@@ -35,31 +14,20 @@ public static class SiiStreamTypeExtensions
             return Encoding.UTF8.GetString(b);
         }
         
-        public string ReadEncodedString()
+        public EncodedString ReadEncodedString()
         {
             var enc = sii.ReadUInt64();
-            return DecodeEncodedString(enc);
+            return new EncodedString(enc);
         }
         
-        public string ReadDataBlockId()
+        public BlockId ReadDataBlockId()
         {
             var len = sii.ReadBytes(1).Single();
-
-            if (len == 255)
-            {
-                var id = sii.ReadUInt64();
-                return $"_nameless.{id:X}";
-            }
             
-            List<string> parts = [];
-            for (var i = 0; i < len; i++)
-            {
-                var part = sii.ReadUInt64();
-                var partStr = DecodeEncodedString(part);
-                parts.Add(partStr);
-            }
+            var partsToRead = len == 255 ? 1 : len;
+            var parts = sii.ReadNUInt64(partsToRead);
 
-            return string.Join(".", parts);
+            return new BlockId(len, parts);
         }
         
         public float[] ReadVec8S()

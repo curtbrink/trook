@@ -8,15 +8,28 @@ public static class DataBlockExtensions
 {
     extension(DataBlock dataBlock)
     {
-        public ProfitLogEntry ToProfitLogEntry()
+        public ProfitLog ToProfitLog()
         {
-            if (dataBlock.StructureId != 15)
-                throw new InvalidOperationException("Data block is not a ProfitLogEntry");
-
-            var returnVal = new ProfitLogEntry();
+            dataBlock.CheckStructId(14, "ProfitLog");
+            var returnVal = new ProfitLog(dataBlock.BlockId);
             returnVal.MapSiiValuesFromBlock(dataBlock);
             return returnVal;
         }
+        
+        public ProfitLogEntry ToProfitLogEntry()
+        {
+            dataBlock.CheckStructId(15, "ProfitLogEntry");
+            var returnVal = new ProfitLogEntry(dataBlock.BlockId);
+            returnVal.MapSiiValuesFromBlock(dataBlock);
+            return returnVal;
+        }
+    }
+
+    private static void CheckStructId(this DataBlock dataBlock, uint id, string modelType)
+    {
+        if (dataBlock.StructureId != id)
+            throw new InvalidOperationException(
+                $"Data block is not a {modelType} - expected structure id {id} but got {dataBlock.StructureId}");
     }
 
     private static void MapSiiValuesFromBlock<T>(this T result, DataBlock dataBlock)
