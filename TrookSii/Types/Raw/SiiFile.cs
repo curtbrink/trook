@@ -16,6 +16,8 @@ public class SiiFile
 
     public IList<ProfitLogEntry> ProfitLogEntryBlocks { get; init; } = [];
 
+    public IList<AiDriver> AiDriverBlocks { get; init; } = [];
+
     // fallback "generic" data blocks that don't have types mapped yet
     public IList<DataBlock> Data { get; init; } = [];
 }

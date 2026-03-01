@@ -54,6 +54,7 @@ public static class SiiDecoder
         // typed data
         var profitLogs = new List<ProfitLog>();
         var profitLogEntries = new List<ProfitLogEntry>();
+        var aiDrivers = new List<AiDriver>();
         var dataBlocks = new List<DataBlock>();
         while (validBlock)
         {
@@ -79,6 +80,9 @@ public static class SiiDecoder
                         case ProfitLogEntry ple:
                             profitLogEntries.Add(ple);
                             break;
+                        case AiDriver ad:
+                            aiDrivers.Add(ad);
+                            break;
                         case DataBlock db:
                             dataBlocks.Add(db);
                             break;
@@ -95,6 +99,7 @@ public static class SiiDecoder
             Version = version,
             ProfitLogBlocks = profitLogs,
             ProfitLogEntryBlocks = profitLogEntries,
+            AiDriverBlocks = aiDrivers,
             Data = dataBlocks,
             Structures = structureBlocks.Values.ToList()
         };
@@ -197,6 +202,7 @@ public static class SiiDecoder
         {
             14 => DecodeTypedDataBlock(sii, new ProfitLog(dataBlockId), structure, logger),
             15 => DecodeTypedDataBlock(sii, new ProfitLogEntry(dataBlockId), structure, logger),
+            17 => DecodeTypedDataBlock(sii, new AiDriver(dataBlockId), structure, logger),
             _ => DecodeGenericDataBlock(sii, dataBlockId, structure, logger)
         };
 
