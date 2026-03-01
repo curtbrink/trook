@@ -1,10 +1,10 @@
+using TrookSii.Types.Models;
+
 namespace TrookSii.Types.Raw;
 
-public class DataBlock
+public class DataBlock(BlockId blockId) : BaseSii(blockId)
 {
     public uint StructureId { get; init; }
-    
-    public required BlockId BlockId { get; init; }
 
     public IList<(ValueDefinition, dynamic)> Data { get; init; } = [];
 }

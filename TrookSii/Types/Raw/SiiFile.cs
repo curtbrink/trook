@@ -1,3 +1,5 @@
+using TrookSii.Types.Models;
+
 namespace TrookSii.Types.Raw;
 
 public class SiiFile
@@ -7,6 +9,13 @@ public class SiiFile
     public uint Version { get; init; }
 
     public IList<StructureBlock> Structures { get; init; } = [];
+    
+    // strongly typed data blocks
 
+    public IList<ProfitLog> ProfitLogBlocks { get; init; } = [];
+
+    public IList<ProfitLogEntry> ProfitLogEntryBlocks { get; init; } = [];
+
+    // fallback "generic" data blocks that don't have types mapped yet
     public IList<DataBlock> Data { get; init; } = [];
 }
