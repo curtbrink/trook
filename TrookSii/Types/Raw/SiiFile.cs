@@ -18,6 +18,12 @@ public class SiiFile
 
     public IList<AiDriver> AiDriverBlocks { get; init; } = [];
 
+    public IList<Company> CompanyBlocks { get; init; } = [];
+
+    public IList<JobOfferData> JobOfferDataBlocks { get; init; } = [];
+    
+    public IList<EconomyEvent> EconomyEventBlocks { get; init; } = [];
+
     // fallback "generic" data blocks that don't have types mapped yet
     public IList<DataBlock> Data { get; init; } = [];
 }

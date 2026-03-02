@@ -55,6 +55,9 @@ public static class SiiDecoder
         var profitLogs = new List<ProfitLog>();
         var profitLogEntries = new List<ProfitLogEntry>();
         var aiDrivers = new List<AiDriver>();
+        var companies = new List<Company>();
+        var jobOfferDatas = new List<JobOfferData>();
+        var economyEvents = new List<EconomyEvent>();
         var dataBlocks = new List<DataBlock>();
         while (validBlock)
         {
@@ -83,6 +86,15 @@ public static class SiiDecoder
                         case AiDriver ad:
                             aiDrivers.Add(ad);
                             break;
+                        case Company c:
+                            companies.Add(c);
+                            break;
+                        case JobOfferData jod:
+                            jobOfferDatas.Add(jod);
+                            break;
+                        case EconomyEvent ee:
+                            economyEvents.Add(ee);
+                            break;
                         case DataBlock db:
                             dataBlocks.Add(db);
                             break;
@@ -100,6 +112,9 @@ public static class SiiDecoder
             ProfitLogBlocks = profitLogs,
             ProfitLogEntryBlocks = profitLogEntries,
             AiDriverBlocks = aiDrivers,
+            CompanyBlocks = companies,
+            JobOfferDataBlocks = jobOfferDatas,
+            EconomyEventBlocks = economyEvents,
             Data = dataBlocks,
             Structures = structureBlocks.Values.ToList()
         };
@@ -203,6 +218,9 @@ public static class SiiDecoder
             14 => DecodeTypedDataBlock(sii, new ProfitLog(dataBlockId), structure, logger),
             15 => DecodeTypedDataBlock(sii, new ProfitLogEntry(dataBlockId), structure, logger),
             17 => DecodeTypedDataBlock(sii, new AiDriver(dataBlockId), structure, logger),
+            19 => DecodeTypedDataBlock(sii, new Company(dataBlockId), structure, logger),
+            20 => DecodeTypedDataBlock(sii, new JobOfferData(dataBlockId), structure, logger),
+            25 => DecodeTypedDataBlock(sii, new EconomyEvent(dataBlockId), structure, logger),
             _ => DecodeGenericDataBlock(sii, dataBlockId, structure, logger)
         };
 
