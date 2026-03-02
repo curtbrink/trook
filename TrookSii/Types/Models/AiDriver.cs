@@ -1,4 +1,3 @@
-using System.Reflection;
 using TrookSii.Types.Mappings;
 using TrookSii.Types.Raw;
 
@@ -6,6 +5,8 @@ namespace TrookSii.Types.Models;
 
 public class AiDriver(BlockId blockId) : BaseSii(blockId)
 {
+    // Sii properties
+    
     [Sii("adr")]
     public uint Adr { get; set; }
     
@@ -40,7 +41,7 @@ public class AiDriver(BlockId blockId) : BaseSii(blockId)
     public long ExtraMaintenance { get; set; }
     
     [Sii("driver_job")]
-    public BlockId DriverJob { get; set; }
+    public BlockId DriverJobId { get; set; }
     
     [Sii("experience_points")]
     public uint ExperiencePoints { get; set; }
@@ -49,10 +50,10 @@ public class AiDriver(BlockId blockId) : BaseSii(blockId)
     public uint TrainingPolicy { get; set; }
     
     [Sii("adopted_truck")]
-    public BlockId AdoptedTruck { get; set; }
+    public BlockId AdoptedTruckId { get; set; }
     
     [Sii("assigned_truck")]
-    public BlockId AssignedTruck { get; set; }
+    public BlockId AssignedTruckId { get; set; }
     
     [Sii("assigned_truck_efficiency")]
     public float AssignedTruckEfficiency { get; set; }
@@ -73,14 +74,33 @@ public class AiDriver(BlockId blockId) : BaseSii(blockId)
     public float SlotTruckMass { get; set; }
     
     [Sii("adopted_trailer")]
-    public BlockId AdoptedTrailer { get; set; }
+    public BlockId AdoptedTrailerId { get; set; }
     
     [Sii("assigned_trailer")]
-    public BlockId AssignedTrailer { get; set; }
+    public BlockId AssignedTrailerId { get; set; }
     
     [Sii("old_hometown")]
     public EncodedString OldHometown { get; set; }
     
     [Sii("profit_log")]
-    public BlockId ProfitLog { get; set; }
+    public BlockId ProfitLogId { get; set; }
+    
+    // Relations
+    
+    public BaseSii? DriverJob { get; set; }
+    public BaseSii? AdoptedTruck { get; set; }
+    public BaseSii? AssignedTruck { get; set; }
+    public BaseSii? AdoptedTrailer { get; set; }
+    public BaseSii? AssignedTrailer { get; set; }
+    public ProfitLog? ProfitLog { get; set; }
+
+    public override void MapRelatedBlocks(IDictionary<string, BaseSii> blockMap)
+    {
+        DriverJob = GetBlockById(DriverJobId, blockMap);
+        AdoptedTruck = GetBlockById(AdoptedTruckId, blockMap);
+        AssignedTruck = GetBlockById(AssignedTruckId, blockMap);
+        AdoptedTrailer = GetBlockById(AdoptedTrailerId, blockMap);
+        AssignedTrailer = GetBlockById(AssignedTrailerId, blockMap);
+        ProfitLog = GetTypedBlockById<ProfitLog>(ProfitLogId, blockMap);
+    }
 }

@@ -5,17 +5,19 @@ namespace TrookSii.Types.Models;
 
 public class Company(BlockId blockId) : BaseSii(blockId)
 {
+    // Sii properties
+    
     [Sii("permanent_data")]
-    public BlockId PermanentData { get; set; }
+    public BlockId PermanentDataId { get; set; }
     
     [Sii("delivered_trailer")]
-    public BlockId DeliveredTrailer { get; set; }
+    public BlockId DeliveredTrailerId { get; set; }
 
     [Sii("delivered_pos")]
     public float[][] DeliveredPosition { get; set; } = [];
 
     [Sii("job_offer")]
-    public BlockId[] JobOffers { get; set; } = [];
+    public BlockId[] JobOfferIds { get; set; } = [];
     
     [Sii("cargo_offer_seeds")]
     public uint[] CargoOfferSeeds { get; set; } = [];
@@ -31,4 +33,17 @@ public class Company(BlockId blockId) : BaseSii(blockId)
     
     [Sii("state_change_time")]
     public uint StateChangeTime { get; set; }
+    
+    // Relations
+    
+    public BaseSii? PermanentData { get; set; }
+    public BaseSii? DeliveredTrailer { get; set; }
+    public JobOfferData[] JobOffers { get; set; } = [];
+
+    public override void MapRelatedBlocks(IDictionary<string, BaseSii> blockMap)
+    {
+        PermanentData = GetBlockById(PermanentDataId, blockMap);
+        DeliveredTrailer = GetBlockById(DeliveredTrailerId, blockMap);
+        JobOffers = GetTypedBlocksById<JobOfferData>(JobOfferIds, blockMap);
+    }
 }

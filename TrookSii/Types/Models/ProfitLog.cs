@@ -5,6 +5,8 @@ namespace TrookSii.Types.Models;
 
 public class ProfitLog(BlockId blockId) : BaseSii(blockId)
 {
+    // Sii properties
+    
     [Sii("stats_data")]
     public BlockId[] StatsDataBlockIds { get; set; } = [];
 
@@ -16,4 +18,13 @@ public class ProfitLog(BlockId blockId) : BaseSii(blockId)
     
     [Sii("history_age")]
     public uint HistoryAge { get; set; }
+    
+    // Relations
+
+    public ProfitLogEntry[] ProfitLogEntries { get; set; } = [];
+
+    public override void MapRelatedBlocks(IDictionary<string, BaseSii> blockMap)
+    {
+        ProfitLogEntries = GetTypedBlocksById<ProfitLogEntry>(StatsDataBlockIds, blockMap);
+    }
 }

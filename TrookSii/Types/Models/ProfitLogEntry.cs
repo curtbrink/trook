@@ -43,4 +43,8 @@ public class ProfitLogEntry(BlockId blockId) : BaseSii(blockId)
     
     [Sii("timestamp_day")]
     public uint TimestampDay { get; set; }
+
+    public override void MapRelatedBlocks(IDictionary<string, BaseSii> blockMap)
+    {
+    }
 }

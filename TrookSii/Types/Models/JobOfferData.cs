@@ -5,6 +5,8 @@ namespace TrookSii.Types.Models;
 
 public class JobOfferData(BlockId blockId): BaseSii(blockId)
 {
+    // Sii properties
+    
     [Sii("target")]
     public string Target { get; set; } = "";
     
@@ -24,16 +26,16 @@ public class JobOfferData(BlockId blockId): BaseSii(blockId)
     public ushort FerryPrice { get; set; }
     
     [Sii("cargo")]
-    public BlockId Cargo { get; set; }
+    public BlockId CargoId { get; set; }
     
     [Sii("company_truck")]
     public string CompanyTruck { get; set; } = "";
     
     [Sii("trailer_variant")]
-    public BlockId TrailerVariant { get; set; }
+    public BlockId TrailerVariantId { get; set; }
     
     [Sii("trailer_definition")]
-    public BlockId TrailerDefinition { get; set; }
+    public BlockId TrailerDefinitionId { get; set; }
     
     [Sii("units_count")]
     public uint UnitsCount { get; set; }
@@ -43,4 +45,17 @@ public class JobOfferData(BlockId blockId): BaseSii(blockId)
 
     [Sii("trailer_place")]
     public float[][] TrailerPlace { get; set; } = [];
+    
+    // Relations
+    
+    public BaseSii? Cargo { get; set; }
+    public BaseSii? TrailerVariant { get; set; }
+    public BaseSii? TrailerDefinition { get; set; }
+
+    public override void MapRelatedBlocks(IDictionary<string, BaseSii> blockMap)
+    {
+        Cargo = GetBlockById(CargoId, blockMap);
+        TrailerVariant = GetBlockById(TrailerVariantId, blockMap);
+        TrailerDefinition = GetBlockById(TrailerDefinitionId, blockMap);
+    }
 }

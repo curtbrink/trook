@@ -34,28 +34,22 @@ Console.WriteLine($"decoded file has {decodedFile.Data.Count} (generic untyped) 
 var str = decodedFile.Data.First();
 foreach (var (vd, v) in str.Data)
 {
-    Console.WriteLine($"{vd.Name} => {v.ToString()}");
+    // Console.WriteLine($"{vd.Name} => {v.ToString()}");
 }
 
 // hierarchy test?
 var clock2 = Stopwatch.StartNew();
 foreach (var ai in decodedFile.AiDriverBlocks)
 {
-    if (ai.ProfitLog.IsEmpty) continue;
-    
-    var profitLog = decodedFile.ProfitLogBlocks.FirstOrDefault(pl => pl.BlockId.Key == ai.ProfitLog.Key);
-    if (profitLog == null || profitLog.StatsDataBlockIds.Length == 0) continue;
+    if (ai.ProfitLog is null || ai.ProfitLog.ProfitLogEntries.Length == 0) continue;
 
     Console.WriteLine(
-        $"{ai.BlockId.Key} has a profit log with {profitLog.StatsDataBlockIds.Length} data blocks...");
+        $"{ai.BlockId.Key} has a profit log with {ai.ProfitLog.ProfitLogEntries.Length} entries...");
 
-    foreach (var dataBlockId in profitLog.StatsDataBlockIds)
+    foreach (var entry in ai.ProfitLog.ProfitLogEntries)
     {
-        var profitLogEntry = decodedFile.ProfitLogEntryBlocks.FirstOrDefault(pl => pl.BlockId.Key == dataBlockId.Key);
-        if (profitLogEntry == null) continue;
-
         Console.WriteLine(
-            $"=> {profitLogEntry.Cargo} from {profitLogEntry.SourceCity} to {profitLogEntry.DestinationCity}");
+            $"=> {entry.Distance}km - {(entry.DistanceOnJob ? entry.Cargo : "[empty]")} from {entry.SourceCity} to {entry.DestinationCity}");
     }
 }
 clock2.Stop();

@@ -59,6 +59,7 @@ public static class SiiDecoder
         var jobOfferDatas = new List<JobOfferData>();
         var economyEvents = new List<EconomyEvent>();
         var dataBlocks = new List<DataBlock>();
+        var blockLookup = new Dictionary<string, BaseSii>();
         while (validBlock)
         {
             // peek at block type
@@ -75,6 +76,8 @@ public static class SiiDecoder
                 validBlock = DecodeDataBlock(sii, structureBlocks, out var block, logger);
                 if (block != null && validBlock)
                 {
+                    // add lookup entry and then add to list
+                    blockLookup.Add(block.BlockId.Key, block);
                     switch (block)
                     {
                         case ProfitLog pl:
@@ -105,6 +108,17 @@ public static class SiiDecoder
             }
         }
 
+        // all blocks have been decoded - post process (map relations)
+        List<BaseSii> allBlocks =
+        [
+            ..profitLogs, ..profitLogEntries, ..aiDrivers, ..companies, ..jobOfferDatas, ..economyEvents, ..dataBlocks
+        ];
+
+        foreach (var block in allBlocks)
+        {
+            block.MapRelatedBlocks(blockLookup);
+        }
+        
         return new SiiFile
         {
             Signature = header,
