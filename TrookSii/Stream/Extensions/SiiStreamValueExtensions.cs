@@ -143,7 +143,7 @@ public static class SiiStreamValueExtensions
             case 0x37:
                 // ordinal strings on the comeback
                 var ordIdx = sii.ReadUInt32();
-                vdValue = structureBlock.OrdinalStrings?[ordIdx] ?? "";
+                vdValue = structureBlock.GetOrdinalString(ordIdx) ?? "";
                 logger?.LogInformation($"====> ordinal string: {vdValue}");
                 break;
             case 0x39:

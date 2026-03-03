@@ -118,20 +118,8 @@ public static class SiiDecoder
         {
             block.MapRelatedBlocks(blockLookup);
         }
-        
-        return new SiiFile
-        {
-            Signature = header,
-            Version = version,
-            ProfitLogBlocks = profitLogs,
-            ProfitLogEntryBlocks = profitLogEntries,
-            AiDriverBlocks = aiDrivers,
-            CompanyBlocks = companies,
-            JobOfferDataBlocks = jobOfferDatas,
-            EconomyEventBlocks = economyEvents,
-            Data = dataBlocks,
-            Structures = structureBlocks.Values.ToList()
-        };
+
+        return new SiiFile(header, version, structureBlocks.Values.ToList(), []);
     }
 
     private static bool DecodeStructureBlock(SiiStream sii, out StructureBlock? block,
@@ -177,13 +165,7 @@ public static class SiiDecoder
 
         logger?.LogInformation("END:   Structure block");
 
-        block = new StructureBlock
-        {
-            Id = structureId,
-            Name = name,
-            Values = valueTypes,
-            OrdinalStrings = ordinals
-        };
+        block = new StructureBlock(structureId, name, valueTypes, ordinals);
         return true;
     }
 
@@ -247,7 +229,7 @@ public static class SiiDecoder
         var propDict =
             targetPropertyInfos.ToDictionary(p => p.GetCustomAttribute<SiiAttribute>()?.SiiName ?? p.Name, p => p);
 
-        foreach (var vd in structure.Values)
+        foreach (var vd in structure)
         {
             var targetHasPropForDefinition = propDict.TryGetValue(vd.Name, out var targetProp);
             if (!targetHasPropForDefinition || targetProp is null) continue;
@@ -263,7 +245,7 @@ public static class SiiDecoder
     {
         var dataValues = new List<(ValueDefinition, dynamic)>();
 
-        foreach (var vd in structure.Values)
+        foreach (var vd in structure)
         {
             var vdValue = sii.GetValueForDefinition(vd, structure, logger);
             dataValues.Add((vd, vdValue));

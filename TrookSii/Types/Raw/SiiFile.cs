@@ -2,28 +2,17 @@ using TrookSii.Types.Models;
 
 namespace TrookSii.Types.Raw;
 
-public class SiiFile
+public class SiiFile(uint signature, uint version, IList<StructureBlock> structureBlocks, IList<NewDataBlock> dataBlocks)
 {
-    public uint Signature { get; init; }
-    
-    public uint Version { get; init; }
+    public uint Signature { get; } = signature;
 
-    public IList<StructureBlock> Structures { get; init; } = [];
-    
-    // strongly typed data blocks
+    public uint Version { get; } = version;
 
-    public IList<ProfitLog> ProfitLogBlocks { get; init; } = [];
+    private readonly Dictionary<uint, StructureBlock> _structureDict = structureBlocks.ToDictionary(sb => sb.Id, sb => sb);
 
-    public IList<ProfitLogEntry> ProfitLogEntryBlocks { get; init; } = [];
+    private readonly Dictionary<string, NewDataBlock> _dataDict = dataBlocks.ToDictionary(db => db.Id.Key, db => db);
 
-    public IList<AiDriver> AiDriverBlocks { get; init; } = [];
+    public StructureBlock GetStructure(uint id) => _structureDict[id];
 
-    public IList<Company> CompanyBlocks { get; init; } = [];
-
-    public IList<JobOfferData> JobOfferDataBlocks { get; init; } = [];
-    
-    public IList<EconomyEvent> EconomyEventBlocks { get; init; } = [];
-
-    // fallback "generic" data blocks that don't have types mapped yet
-    public IList<DataBlock> Data { get; init; } = [];
+    public NewDataBlock GetData(string id) => _dataDict[id];
 }
