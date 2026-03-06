@@ -12,7 +12,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadBoolArray();
+        var bArray = s.ReadBoolArray().UnwrapArrayPrimitives<bool>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -28,7 +28,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadFloatArray();
+        var bArray = s.ReadFloatArray().UnwrapArrayPrimitives<float>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -44,7 +44,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadUInt16Array();
+        var bArray = s.ReadUInt16Array().UnwrapArrayPrimitives<ushort>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -60,7 +60,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadUInt32Array();
+        var bArray = s.ReadUInt32Array().UnwrapArrayPrimitives<uint>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -76,7 +76,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadUInt64Array();
+        var bArray = s.ReadUInt64Array().UnwrapArrayPrimitives<ulong>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -92,7 +92,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadInt32Array();
+        var bArray = s.ReadInt32Array().UnwrapArrayPrimitives<int>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -108,7 +108,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadInt64Array();
+        var bArray = s.ReadInt64Array().UnwrapArrayPrimitives<long>();
         Assert.Equal(5, bArray.Length);
         for (var i = 0; i < 5; i++)
         {
@@ -126,7 +126,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadVec3IArray();
+        var bArray = s.ReadVec3IArray().UnwrapVectorPrimitives<int>();
         Assert.Equal(2, bArray.Length);
         for (var i = 0; i < 2; i++)
         {
@@ -145,7 +145,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadVec3SArray();
+        var bArray = s.ReadVec3SArray().UnwrapVectorPrimitives<float>();
         Assert.Equal(2, bArray.Length);
         for (var i = 0; i < 2; i++)
         {
@@ -164,7 +164,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadVec4SArray();
+        var bArray = s.ReadVec4SArray().UnwrapVectorPrimitives<float>();
         Assert.Equal(2, bArray.Length);
         for (var i = 0; i < 2; i++)
         {
@@ -185,7 +185,7 @@ public class SiiStreamArrayTests
 
         var s = new Stream.SiiStream(ref bytes);
 
-        var bArray = s.ReadVec8SArray();
+        var bArray = s.ReadVec8SArray().UnwrapVectorPrimitives<float>();
         Assert.Equal(2, bArray.Length);
         for (var i = 0; i < 7; i++)
         {

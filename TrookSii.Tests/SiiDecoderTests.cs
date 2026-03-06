@@ -11,8 +11,8 @@ public class SiiDecoderTests
 
         var sii = SiiDecoder.DecodeSii(decryptedData);
 
-        Assert.Equal(structCount, sii.Structures.Count);
-        Assert.Equal(dataCount, sii.Data.Count);
+        Assert.Equal(structCount, sii.StructureCount);
+        Assert.Equal(dataCount, sii.DataCount);
     }
     
     private static async Task<byte[]> GetDecodedData(string f)

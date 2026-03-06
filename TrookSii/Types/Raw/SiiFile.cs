@@ -1,29 +1,30 @@
-using TrookSii.Types.Models;
-
 namespace TrookSii.Types.Raw;
 
-public class SiiFile
+public class SiiFile(uint signature, uint version, IList<StructureBlock> structureBlocks, IList<DataBlock> dataBlocks)
 {
-    public uint Signature { get; init; }
+    public uint Signature { get; } = signature;
+
+    public uint Version { get; } = version;
     
-    public uint Version { get; init; }
+    public int StructureCount { get; } = structureBlocks.Count;
 
-    public IList<StructureBlock> Structures { get; init; } = [];
-    
-    // strongly typed data blocks
+    public int DataCount { get; } = dataBlocks.Count;
 
-    public IList<ProfitLog> ProfitLogBlocks { get; init; } = [];
+    private readonly Dictionary<uint, StructureBlock> _structureDict = structureBlocks.ToDictionary(sb => sb.Id, sb => sb);
 
-    public IList<ProfitLogEntry> ProfitLogEntryBlocks { get; init; } = [];
+    private readonly Dictionary<string, DataBlock> _dataDict = dataBlocks.ToDictionary(db => db.Id.Key, db => db);
 
-    public IList<AiDriver> AiDriverBlocks { get; init; } = [];
+    public StructureBlock GetStructure(uint id) => _structureDict[id];
 
-    public IList<Company> CompanyBlocks { get; init; } = [];
+    public StructureBlock GetStructureByName(string name) => structureBlocks.First(s => s.Name == name);
 
-    public IList<JobOfferData> JobOfferDataBlocks { get; init; } = [];
-    
-    public IList<EconomyEvent> EconomyEventBlocks { get; init; } = [];
+    public DataBlock GetData(string id) => _dataDict[id];
 
-    // fallback "generic" data blocks that don't have types mapped yet
-    public IList<DataBlock> Data { get; init; } = [];
+    public IList<DataBlock> GetDataByStructureId(uint id) => dataBlocks.Where(db => db.Structure.Id == id).ToList();
+
+    public IList<DataBlock> GetDataByStructureName(string name)
+    {
+        var sb = GetStructureByName(name);
+        return dataBlocks.Where(db => db.Structure.Id == sb.Id).ToList();
+    }
 }
