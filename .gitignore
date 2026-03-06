@@ -1,4 +1,7 @@
 bin/
+# bad dotnet tool
+*/bin\\Debug/
+*/bin\\Release/
 obj/
 /packages/
 riderModule.iml

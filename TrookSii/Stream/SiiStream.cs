@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+
 namespace TrookSii.Stream;
 
 public class SiiStream(ref byte[] buffer)
@@ -5,6 +7,8 @@ public class SiiStream(ref byte[] buffer)
     private readonly byte[] _buffer = buffer;
     
     private int _idx = 0;
+    
+    public byte[] Hash { get; } = GetHash(buffer);
 
     public byte[] ReadBytes(int count)
     {
@@ -67,5 +71,7 @@ public class SiiStream(ref byte[] buffer)
         _idx = _buffer.Length;
         return v;
     }
+
+    private static byte[] GetHash(byte[] buffer) => MD5.Create().ComputeHash(buffer);
 
 }
