@@ -1,5 +1,4 @@
 using System.Text;
-using TrookSii.Stream.Extensions;
 using TrookSii.Types.Raw;
 
 namespace TrookSii.Tests.SiiStream;
@@ -72,5 +71,31 @@ public static class TypeHelpers
             int[] ia => ia.SelectMany(BitConverter.GetBytes).ToArray(),
             _ => throw new ArgumentOutOfRangeException(nameof(item), "Invalid type")
         };
+    }
+
+    public static T[] UnwrapArrayPrimitives<T>(this SiiArray siia)
+    {
+        var values = (SiiValue[])siia.Values;
+        var ts = new T[values.Length];
+        for (var i = 0; i < values.Length; i++)
+        {
+            var p = (SiiPrimitive)values[i];
+            ts[i] = (T)p.Value;
+        }
+
+        return ts;
+    }
+
+    public static T[][] UnwrapVectorPrimitives<T>(this SiiArray siia)
+    {
+        var values = (SiiValue[])siia.Values;
+        var ts = new T[values.Length][];
+        for (var i = 0; i < values.Length; i++)
+        {
+            var v = (SiiVector)values[i];
+            ts[i] = (T[])v.Values;
+        }
+
+        return ts;
     }
 }

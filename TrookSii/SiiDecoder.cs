@@ -50,16 +50,9 @@ public static class SiiDecoder
         logger?.LogInformation($"File version: {version}");
 
         var validBlock = true;
-        var structureBlocks = new Dictionary<uint, StructureBlock>();
-        // typed data
-        var profitLogs = new List<ProfitLog>();
-        var profitLogEntries = new List<ProfitLogEntry>();
-        var aiDrivers = new List<AiDriver>();
-        var companies = new List<Company>();
-        var jobOfferDatas = new List<JobOfferData>();
-        var economyEvents = new List<EconomyEvent>();
-        var dataBlocks = new List<DataBlock>();
-        var blockLookup = new Dictionary<string, BaseSii>();
+        var structureBlockLookup = new Dictionary<uint, StructureBlock>();
+        var structureBlocks = new List<StructureBlock>();
+        var dataBlocks = new List<NewDataBlock>();
         while (validBlock)
         {
             // peek at block type
@@ -68,58 +61,25 @@ public static class SiiDecoder
             {
                 // structure block
                 validBlock = DecodeStructureBlock(sii, out var block, logger);
-                if (block != null && validBlock) structureBlocks[block.Id] = block;
+                if (block != null && validBlock)
+                {
+                    structureBlockLookup[block.Id] = block;
+                    structureBlocks.Add(block);
+                }
             }
             else
             {
                 // data block
-                validBlock = DecodeDataBlock(sii, structureBlocks, out var block, logger);
+                validBlock = DecodeDataBlock(sii, structureBlockLookup, out var block, logger);
                 if (block != null && validBlock)
                 {
                     // add lookup entry and then add to list
-                    blockLookup.Add(block.BlockId.Key, block);
-                    switch (block)
-                    {
-                        case ProfitLog pl:
-                            profitLogs.Add(pl);
-                            break;
-                        case ProfitLogEntry ple:
-                            profitLogEntries.Add(ple);
-                            break;
-                        case AiDriver ad:
-                            aiDrivers.Add(ad);
-                            break;
-                        case Company c:
-                            companies.Add(c);
-                            break;
-                        case JobOfferData jod:
-                            jobOfferDatas.Add(jod);
-                            break;
-                        case EconomyEvent ee:
-                            economyEvents.Add(ee);
-                            break;
-                        case DataBlock db:
-                            dataBlocks.Add(db);
-                            break;
-                        default:
-                            throw new InvalidOperationException($"Unexpected block type! ({block.GetType().Name})");
-                    }
+                    dataBlocks.Add(block);
                 }
             }
         }
 
-        // all blocks have been decoded - post process (map relations)
-        List<BaseSii> allBlocks =
-        [
-            ..profitLogs, ..profitLogEntries, ..aiDrivers, ..companies, ..jobOfferDatas, ..economyEvents, ..dataBlocks
-        ];
-
-        foreach (var block in allBlocks)
-        {
-            block.MapRelatedBlocks(blockLookup);
-        }
-
-        return new SiiFile(header, version, structureBlocks.Values.ToList(), []);
+        return new SiiFile(header, version, structureBlocks, dataBlocks);
     }
 
     private static bool DecodeStructureBlock(SiiStream sii, out StructureBlock? block,
@@ -186,7 +146,7 @@ public static class SiiDecoder
     }
 
     private static bool DecodeDataBlock(SiiStream sii, IDictionary<uint, StructureBlock> structureBlocks,
-        out BaseSii? block, ILogger<SiiStream>? logger = null)
+        out NewDataBlock? block, ILogger<SiiStream>? logger = null)
     {
         var structId = sii.ReadUInt32();
         StructureBlock structure;
@@ -209,41 +169,7 @@ public static class SiiDecoder
 
         logger?.LogInformation($"==> id: {dataBlockId}");
 
-        block = structId switch
-        {
-            14 => DecodeTypedDataBlock(sii, new ProfitLog(dataBlockId), structure, logger),
-            15 => DecodeTypedDataBlock(sii, new ProfitLogEntry(dataBlockId), structure, logger),
-            17 => DecodeTypedDataBlock(sii, new AiDriver(dataBlockId), structure, logger),
-            19 => DecodeTypedDataBlock(sii, new Company(dataBlockId), structure, logger),
-            20 => DecodeTypedDataBlock(sii, new JobOfferData(dataBlockId), structure, logger),
-            25 => DecodeTypedDataBlock(sii, new EconomyEvent(dataBlockId), structure, logger),
-            _ => DecodeGenericDataBlock(sii, dataBlockId, structure, logger)
-        };
-
-        return true;
-    }
-
-    private static T DecodeTypedDataBlock<T>(SiiStream sii, T target, StructureBlock structure, ILogger<SiiStream>? logger = null) where T : BaseSii
-    {
-        var targetPropertyInfos = typeof(T).GetProperties();
-        var propDict =
-            targetPropertyInfos.ToDictionary(p => p.GetCustomAttribute<SiiAttribute>()?.SiiName ?? p.Name, p => p);
-
-        foreach (var vd in structure)
-        {
-            var targetHasPropForDefinition = propDict.TryGetValue(vd.Name, out var targetProp);
-            if (!targetHasPropForDefinition || targetProp is null) continue;
-
-            var vdValue = sii.GetValueForDefinition(vd, structure, logger);
-            targetProp.SetValue(target, vdValue);
-        }
-
-        return target;
-    }
-
-    public static DataBlock DecodeGenericDataBlock(SiiStream sii, BlockId dataBlockId, StructureBlock structure, ILogger<SiiStream>? logger = null)
-    {
-        var dataValues = new List<(ValueDefinition, dynamic)>();
+        var dataValues = new List<(ValueDefinition, SiiValue)>();
 
         foreach (var vd in structure)
         {
@@ -251,10 +177,8 @@ public static class SiiDecoder
             dataValues.Add((vd, vdValue));
         }
 
-        return new DataBlock(dataBlockId)
-        {
-            StructureId = structure.Id,
-            Data = dataValues
-        };
+        block = new NewDataBlock(dataBlockId, structure, dataValues);
+
+        return true;
     }
 }

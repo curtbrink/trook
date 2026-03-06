@@ -112,7 +112,7 @@ public class SiiStreamTypeTests
         Assert.Equal(7, vec8S.Length);
         for (var i = 0; i < 7; i++)
         {
-            Assert.Equal(expectedFloats[i], vec8S[i]);
+            Assert.Equal(expectedFloats[i], (float)vec8S.Values.GetValue(i)!);
         }
     }
 
