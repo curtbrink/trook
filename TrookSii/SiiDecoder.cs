@@ -1,10 +1,6 @@
-using System.Reflection;
 using Microsoft.Extensions.Logging;
 using TrookSii.Stream;
 using TrookSii.Stream.Extensions;
-using TrookSii.Types;
-using TrookSii.Types.Mappings;
-using TrookSii.Types.Models;
 using TrookSii.Types.Raw;
 
 namespace TrookSii;
@@ -52,7 +48,7 @@ public static class SiiDecoder
         var validBlock = true;
         var structureBlockLookup = new Dictionary<uint, StructureBlock>();
         var structureBlocks = new List<StructureBlock>();
-        var dataBlocks = new List<NewDataBlock>();
+        var dataBlocks = new List<DataBlock>();
         while (validBlock)
         {
             // peek at block type
@@ -146,7 +142,7 @@ public static class SiiDecoder
     }
 
     private static bool DecodeDataBlock(SiiStream sii, IDictionary<uint, StructureBlock> structureBlocks,
-        out NewDataBlock? block, ILogger<SiiStream>? logger = null)
+        out DataBlock? block, ILogger<SiiStream>? logger = null)
     {
         var structId = sii.ReadUInt32();
         StructureBlock structure;
@@ -177,7 +173,7 @@ public static class SiiDecoder
             dataValues.Add((vd, vdValue));
         }
 
-        block = new NewDataBlock(dataBlockId, structure, dataValues);
+        block = new DataBlock(dataBlockId, structure, dataValues);
 
         return true;
     }

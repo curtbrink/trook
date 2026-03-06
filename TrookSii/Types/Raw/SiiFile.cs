@@ -1,8 +1,6 @@
-using TrookSii.Types.Models;
-
 namespace TrookSii.Types.Raw;
 
-public class SiiFile(uint signature, uint version, IList<StructureBlock> structureBlocks, IList<NewDataBlock> dataBlocks)
+public class SiiFile(uint signature, uint version, IList<StructureBlock> structureBlocks, IList<DataBlock> dataBlocks)
 {
     public uint Signature { get; } = signature;
 
@@ -14,9 +12,9 @@ public class SiiFile(uint signature, uint version, IList<StructureBlock> structu
 
     private readonly Dictionary<uint, StructureBlock> _structureDict = structureBlocks.ToDictionary(sb => sb.Id, sb => sb);
 
-    private readonly Dictionary<string, NewDataBlock> _dataDict = dataBlocks.ToDictionary(db => db.Id.Key, db => db);
+    private readonly Dictionary<string, DataBlock> _dataDict = dataBlocks.ToDictionary(db => db.Id.Key, db => db);
 
     public StructureBlock GetStructure(uint id) => _structureDict[id];
 
-    public NewDataBlock GetData(string id) => _dataDict[id];
+    public DataBlock GetData(string id) => _dataDict[id];
 }
