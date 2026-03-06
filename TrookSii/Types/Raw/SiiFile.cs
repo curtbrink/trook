@@ -16,5 +16,15 @@ public class SiiFile(uint signature, uint version, IList<StructureBlock> structu
 
     public StructureBlock GetStructure(uint id) => _structureDict[id];
 
+    public StructureBlock GetStructureByName(string name) => structureBlocks.First(s => s.Name == name);
+
     public DataBlock GetData(string id) => _dataDict[id];
+
+    public IList<DataBlock> GetDataByStructureId(uint id) => dataBlocks.Where(db => db.Structure.Id == id).ToList();
+
+    public IList<DataBlock> GetDataByStructureName(string name)
+    {
+        var sb = GetStructureByName(name);
+        return dataBlocks.Where(db => db.Structure.Id == sb.Id).ToList();
+    }
 }
