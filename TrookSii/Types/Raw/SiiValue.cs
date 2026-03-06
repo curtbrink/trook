@@ -12,6 +12,7 @@ public enum SiiValueType
     ULong,
     Long,
     Float,
+    Bool,
     BlockId
 }
 
@@ -31,7 +32,7 @@ public sealed class SiiPrimitive(SiiValueType t, object v) : SiiValue(t)
     public object Value { get; } = v;
 }
 
-public sealed class SiiVector(SiiValueType t, object[] v) : SiiValue(t)
+public sealed class SiiVector(SiiValueType t, Array v) : SiiValue(t)
 {
     public int Length { get; } = v.Length;
     public Array Values { get; } = v;

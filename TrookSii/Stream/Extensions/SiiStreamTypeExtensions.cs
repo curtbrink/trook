@@ -30,33 +30,37 @@ public static class SiiStreamTypeExtensions
             return new BlockId(len, parts);
         }
         
-        public float[] ReadVec8S()
+        public float[] ReadNFloat(int n)
         {
-            // by far the weirdest one so far...
-            var allFloats = sii.ReadNFloat(8);
+            var v = new float[n];
+            for (var i = 0; i < n; i++)
+            {
+                v[i] = sii.ReadFloat();
+            }
 
-            var baseBias = (int)allFloats[3]; // fourth component is the special one
-
-            var biasedA = baseBias & 0xFFF;
-            biasedA -= 2048;
-            biasedA <<= 9;
-            var finalA = biasedA + allFloats[0];
-
-            var biasedC = baseBias >> 12;
-            biasedC &= 0xFFF;
-            biasedC -= 2048;
-            biasedC <<= 9;
-            var finalC = biasedC + allFloats[2];
-
-            return [finalA, allFloats[1], finalC, allFloats[4], allFloats[5], allFloats[6], allFloats[7]];
+            return v;
         }
 
-        public float[] ReadVec2S() => sii.ReadNFloat(2);
+        public ulong[] ReadNUInt64(int n)
+        {
+            var v = new ulong[n];
+            for (var i = 0; i < n; i++)
+            {
+                v[i] = sii.ReadUInt64();
+            }
 
-        public float[] ReadVec3S() => sii.ReadNFloat(3);
+            return v;
+        }
 
-        public float[] ReadVec4S() => sii.ReadNFloat(4);
+        public int[] ReadNInt32(int n)
+        {
+            var v = new int[n];
+            for (var i = 0; i < n; i++)
+            {
+                v[i] = sii.ReadInt32();
+            }
 
-        public int[] ReadVec3I() => sii.ReadNInt32(3);
+            return v;
+        }
     }
 }

@@ -5,163 +5,159 @@ namespace TrookSii.Stream.Extensions;
 
 public static class SiiStreamValueExtensions
 {
-    public static dynamic GetValueForDefinition(this SiiStream sii, ValueDefinition vd, StructureBlock structureBlock,
-        ILogger<SiiStream>? logger = null)
+    extension(SiiStream sii)
     {
-        dynamic vdValue;
-        logger?.LogInformation($"==> field: {vd.Name} (type = 0x{vd.TypeId:X})");
-        switch (vd.TypeId)
+        public SiiValue GetValueForDefinition(ValueDefinition vd, StructureBlock structureBlock,
+            ILogger<SiiStream>? logger = null)
         {
-            case 0x01:
-                vdValue = sii.ReadString();
-                logger?.LogInformation($"====> string: {vdValue}");
-                break;
-            case 0x02:
-                vdValue = sii.ReadStringArray();
-                foreach (var s in vdValue)
-                    logger?.LogInformation($"====> string: {s}");
-                break;
-            case 0x03:
-                vdValue = sii.ReadEncodedString();
-                logger?.LogInformation($"====> enc string: {vdValue}");
-                break;
-            case 0x04:
-                vdValue = sii.ReadEncodedStringArray();
-                foreach (var s in vdValue)
-                    logger?.LogInformation($"====> enc string: {s}");
-                break;
-            case 0x05:
-                vdValue = sii.ReadFloat();
-                logger?.LogInformation($"====> float: {vdValue}");
-                break;
-            case 0x06:
-                vdValue = sii.ReadFloatArray();
-                foreach (var sf in vdValue)
-                    logger?.LogInformation($"====> float: {sf}");
-                break;
-            case 0x07:
-                vdValue = sii.ReadVec2S();
-                logger?.LogInformation($"====> vec2floats: [{vdValue[0]}, {vdValue[1]}]");
-                break;
-            case 0x09:
-                vdValue = sii.ReadVec3S();
-                logger?.LogInformation($"====> vec3floats: [{vdValue[0]}, {vdValue[1]}, {vdValue[2]}]");
-                break;
-            case 0x11:
-                vdValue = sii.ReadVec3I();
-                foreach (var v in vdValue)
-                    logger?.LogInformation($"====> int: {v}");
-                break;
-            case 0x12:
-                vdValue = sii.ReadVec3IArray();
-                foreach (var vec3 in vdValue)
-                    logger?.LogInformation($"====> vec3: [{vec3[0]}, {vec3[1]}, {vec3[2]}]");
-                break;
-            case 0x18:
-                vdValue = sii.ReadVec4SArray();
-                foreach (var vec4A in vdValue)
-                {
-                    logger?.LogInformation("====> vec4s array:");
-                    foreach (var vec4 in vec4A)
-                        logger?.LogInformation($"======> float: {vec4}");
-                }
-
-                break;
-            case 0x19:
-                vdValue = sii.ReadVec8S();
-                foreach (var weirdFloat in vdValue)
-                    logger?.LogInformation($"====> biased float: {weirdFloat}");
-                break;
-            case 0x1a:
-                vdValue = sii.ReadVec8SArray();
-                foreach (var wfa in vdValue)
-                {
-                    logger?.LogInformation($"====> weird float array:");
-                    foreach (var wfa2 in wfa)
-                        logger?.LogInformation($"======> weird float: {wfa2}");
-                }
-
-                break;
-            case 0x25:
-                vdValue = sii.ReadInt32();
-                logger?.LogInformation($"====> int: {vdValue}");
-                break;
-            case 0x26:
-                vdValue = sii.ReadInt32Array();
-                foreach (var s in vdValue)
-                    logger?.LogInformation($"====> int: {s}");
-                break;
-            case 0x27:
-                vdValue = sii.ReadUInt32();
-                logger?.LogInformation($"====> uint: {vdValue}");
-                break;
-            case 0x28:
-                vdValue = sii.ReadUInt32Array();
-                foreach (var nsv in vdValue)
-                    logger?.LogInformation($"====> uint: {vdValue}");
-                break;
-            case 0x2b:
-                vdValue = sii.ReadUInt16();
-                logger?.LogInformation($"====> ushort: {vdValue}");
-                break;
-            case 0x2c:
-                vdValue = sii.ReadUInt16Array();
-                foreach (var us in vdValue)
-                    logger?.LogInformation($"====> ushort: {us}");
-                break;
-            case 0x2f:
-                vdValue = sii.ReadUInt32();
-                logger?.LogInformation($"====> uint: {vdValue}");
-                break;
-            case 0x31:
-                vdValue = sii.ReadInt64();
-                logger?.LogInformation($"====> long: {vdValue}");
-                break;
-            case 0x32:
-                vdValue = sii.ReadInt64Array();
-                foreach (var slv in vdValue)
-                    logger?.LogInformation($"====> long: {slv}");
-                break;
-            case 0x33:
-                vdValue = sii.ReadUInt64();
-                logger?.LogInformation($"====> ulong: {vdValue}");
-                break;
-            case 0x34:
-                vdValue = sii.ReadUInt64Array();
-                foreach (var ui64 in vdValue)
-                    logger?.LogInformation($"====> ulong: {ui64}");
-                break;
-            case 0x35:
-                vdValue = sii.ReadBool();
-                logger?.LogInformation($"====> bool: {vdValue}");
-                break;
-            case 0x36:
-                vdValue = sii.ReadBoolArray();
-                foreach (var b in vdValue)
-                    logger?.LogInformation($"====> bool: {b}");
-                break;
-            case 0x37:
-                // ordinal strings on the comeback
-                var ordIdx = sii.ReadUInt32();
-                vdValue = structureBlock.GetOrdinalString(ordIdx) ?? "";
-                logger?.LogInformation($"====> ordinal string: {vdValue}");
-                break;
-            case 0x39:
-            case 0x3b:
-            case 0x3d:
-                vdValue = sii.ReadDataBlockId();
-                logger?.LogInformation($"====> block id: {vdValue}");
-                break;
-            case 0x3a:
-            case 0x3c:
-                vdValue = sii.ReadDataBlockIdArray();
-                foreach (var b in vdValue)
-                    logger?.LogInformation($"====> block list: {b}");
-                break;
-            default:
-                throw new InvalidOperationException($"Unknown data type! 0x{vd.TypeId:X}");
+            logger?.LogInformation($"==> field: {vd.Name} (type = 0x{vd.TypeId:X})");
+            return vd.TypeId switch
+            {
+                0x01 => sii.ReadStringPrimitive(),
+                0x02 => sii.ReadStringArray(),
+                0x03 => sii.ReadEncodedStringPrimitive(),
+                0x04 => sii.ReadEncodedStringArray(),
+                0x05 => sii.ReadFloatPrimitive(),
+                0x06 => sii.ReadFloatArray(),
+                0x07 => sii.ReadVec2S(),
+                0x09 => sii.ReadVec3S(),
+                0x0a => sii.ReadVec3SArray(),
+                0x11 => sii.ReadVec3I(),
+                0x12 => sii.ReadVec3IArray(),
+                0x17 => sii.ReadVec4S(),
+                0x18 => sii.ReadVec4SArray(),
+                0x19 => sii.ReadVec8S(),
+                0x1a => sii.ReadVec8SArray(),
+                0x25 => sii.ReadInt32Primitive(),
+                0x26 => sii.ReadInt32Array(),
+                0x27 or 0x2f => sii.ReadUInt32Primitive(),
+                0x28 => sii.ReadUInt32Array(),
+                0x2b => sii.ReadUInt16Primitive(),
+                0x2c => sii.ReadUInt16Array(),
+                0x31 => sii.ReadInt64Primitive(),
+                0x32 => sii.ReadInt64Array(),
+                0x33 => sii.ReadUInt64Primitive(),
+                0x34 => sii.ReadUInt64Array(),
+                0x35 => sii.ReadBoolPrimitive(),
+                0x36 => sii.ReadBoolArray(),
+                0x37 => sii.ReadOrdinalString(structureBlock),
+                0x39 or 0x3b or 0x3d => sii.ReadBlockIdPrimitive(),
+                0x3a or 0x3c => sii.ReadBlockIdArray(),
+                _ => throw new InvalidOperationException($"Unknown data type! 0x{vd.TypeId:X}")
+            };
         }
 
-        return vdValue;
+        public SiiPrimitive ReadStringPrimitive() => new(SiiValueType.String, sii.ReadString());
+
+        public SiiPrimitive ReadEncodedStringPrimitive() => new(SiiValueType.EncodedString, sii.ReadEncodedString());
+
+        public SiiPrimitive ReadFloatPrimitive() => new(SiiValueType.Float, sii.ReadFloat());
+
+        public SiiPrimitive ReadInt32Primitive() => new(SiiValueType.Int, sii.ReadInt32());
+
+        public SiiPrimitive ReadInt64Primitive() => new(SiiValueType.Long, sii.ReadInt64());
+
+        public SiiPrimitive ReadUInt32Primitive() => new(SiiValueType.UInt, sii.ReadUInt32());
+
+        public SiiPrimitive ReadUInt16Primitive() => new(SiiValueType.UShort, sii.ReadUInt16());
+
+        public SiiPrimitive ReadUInt64Primitive() => new(SiiValueType.ULong, sii.ReadUInt64());
+
+        public SiiPrimitive ReadBoolPrimitive() => new(SiiValueType.Bool, sii.ReadBool());
+
+        public SiiPrimitive ReadBlockIdPrimitive() => new(SiiValueType.BlockId, sii.ReadDataBlockId());
+        
+        public SiiVector ReadVec2S() => new(SiiValueType.Float, sii.ReadNFloat(2));
+
+        public SiiVector ReadVec3S() => new(SiiValueType.Float, sii.ReadNFloat(3));
+
+        public SiiVector ReadVec4S() => new(SiiValueType.Float, sii.ReadNFloat(4));
+
+        public SiiVector ReadVec3I() => new(SiiValueType.Int, sii.ReadNInt32(3));
+        
+        public SiiArray ReadStringArray() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.String, sii.ReadStringPrimitive);
+
+        public SiiArray ReadEncodedStringArray() => sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.EncodedString,
+            sii.ReadEncodedStringPrimitive);
+
+        public SiiArray ReadFloatArray() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.Float, sii.ReadFloatPrimitive);
+
+        public SiiArray ReadInt32Array() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.Int, sii.ReadInt32Primitive);
+
+        public SiiArray ReadInt64Array() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.Long, sii.ReadInt64Primitive);
+
+        public SiiArray ReadUInt32Array() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.UInt, sii.ReadUInt32Primitive);
+
+        public SiiArray ReadUInt16Array() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.UShort, sii.ReadUInt16Primitive);
+
+        public SiiArray ReadUInt64Array() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.ULong, sii.ReadUInt64Primitive);
+
+        public SiiArray ReadBoolArray() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.Bool, sii.ReadBoolPrimitive);
+
+        public SiiArray ReadVec3SArray() => sii.ReadArray(SiiWrapperType.Vector, SiiValueType.Float, sii.ReadVec3S);
+
+        public SiiArray ReadVec4SArray() => sii.ReadArray(SiiWrapperType.Vector, SiiValueType.Float, sii.ReadVec4S);
+
+        public SiiArray ReadVec8SArray() => sii.ReadArray(SiiWrapperType.Vector, SiiValueType.Float, sii.ReadVec8S);
+        
+        public SiiArray ReadVec3IArray() => sii.ReadArray(SiiWrapperType.Vector, SiiValueType.Int, sii.ReadVec3I);
+
+        public SiiArray ReadBlockIdArray() =>
+            sii.ReadArray(SiiWrapperType.Primitive, SiiValueType.BlockId, sii.ReadBlockIdPrimitive);
+
+        public SiiArray ReadArray(SiiWrapperType w, SiiValueType t, Func<SiiValue> getter)
+        {
+            var l = (int)sii.ReadUInt32();
+            var v = new SiiValue[l];
+            for (var i = 0; i < l; i++)
+            {
+                v[i] = getter();
+            }
+
+            return new SiiArray(w, t, v);
+        }
+        
+        // special types
+
+        public SiiPrimitive ReadOrdinalString(StructureBlock structure)
+        {
+            var idx = sii.ReadUInt32();
+            var s = structure.GetOrdinalString(idx);
+            if (s is null)
+                throw new InvalidOperationException(
+                    $"Structure block with id={structure.Id} does not contain ordinal string with index={idx}");
+            return new SiiPrimitive(SiiValueType.String, s);
+        }
+        
+        public SiiVector ReadVec8S()
+        {
+            // by far the weirdest one so far...
+            var allFloats = sii.ReadNFloat(8);
+
+            var baseBias = (int)allFloats[3]; // fourth component is the special one
+
+            var biasedA = baseBias & 0xFFF;
+            biasedA -= 2048;
+            biasedA <<= 9;
+            var finalA = biasedA + allFloats[0];
+
+            var biasedC = baseBias >> 12;
+            biasedC &= 0xFFF;
+            biasedC -= 2048;
+            biasedC <<= 9;
+            var finalC = biasedC + allFloats[2];
+
+            float[] v = [finalA, allFloats[1], finalC, allFloats[4], allFloats[5], allFloats[6], allFloats[7]];
+
+            return new SiiVector(SiiValueType.Float, v);
+        }
     }
 }

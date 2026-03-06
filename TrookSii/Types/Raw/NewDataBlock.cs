@@ -40,6 +40,7 @@ public class NewDataBlock(BlockId blockId, StructureBlock structure, IList<(Valu
             SiiValueType.ULong when typeof(T) == typeof(ulong) => (T)siiPrimitive.Value,
             SiiValueType.Long when typeof(T) == typeof(long) => (T)siiPrimitive.Value,
             SiiValueType.Float when typeof(T) == typeof(float) => (T)siiPrimitive.Value,
+            SiiValueType.Bool when typeof(T) == typeof(bool) => (T)siiPrimitive.Value,
             SiiValueType.BlockId when typeof(T) == typeof(BlockId) => (T)siiPrimitive.Value,
             _ => throw new InvalidOperationException($"Primitive value is not of type '{typeof(T).Name}'")
         };
