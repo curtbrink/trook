@@ -1,4 +1,6 @@
-namespace TrookSii.Types.Raw;
+using TrookSii.Types.Raw;
+
+namespace TrookSii.Types.Blocks;
 
 public class DataBlock(BlockId blockId, StructureBlock structure, IList<(ValueDefinition, SiiValue)> data)
 {

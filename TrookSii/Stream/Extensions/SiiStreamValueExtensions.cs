@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using TrookSii.Types.Blocks;
 using TrookSii.Types.Raw;
 
 namespace TrookSii.Stream.Extensions;

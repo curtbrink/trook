@@ -1,4 +1,6 @@
-namespace TrookSii.Types.Raw;
+using TrookSii.Types.Raw;
+
+namespace TrookSii.Types.Blocks;
 
 public class StructureBlock(
     uint id,

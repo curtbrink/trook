@@ -1,3 +1,5 @@
+using TrookSii.Types.Raw;
+
 namespace TrookSii.Tests;
 
 public class SiiDecoderTests
@@ -11,8 +13,10 @@ public class SiiDecoderTests
 
         var sii = SiiDecoder.DecodeSii(decryptedData);
 
-        Assert.Equal(structCount, sii.StructureCount);
-        Assert.Equal(dataCount, sii.DataCount);
+        var siib = Assert.IsType<SiiBinaryFile>(sii);
+
+        Assert.Equal(structCount, siib.StructureCount);
+        Assert.Equal(dataCount, siib.DataCount);
     }
     
     private static async Task<byte[]> GetDecodedData(string f)

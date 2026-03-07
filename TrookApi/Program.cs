@@ -1,8 +1,19 @@
-using System.Diagnostics;
-using TrookSii;
-using TrookSii.Types.Raw;
+using Microsoft.EntityFrameworkCore;
+using TrookApi.Database;
+using TrookApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var sqliteDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "trook");
+Directory.CreateDirectory(sqliteDirectory);
+var sqliteFile = Path.Combine(sqliteDirectory, "trook.db");
+
+builder.Services.AddDbContext<TrookDbContext>(o =>
+{
+    o.UseSqlite($"Data Source={sqliteFile}");
+});
+
+builder.Services.AddScoped<FileService>();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -20,17 +31,13 @@ app.UseHttpsRedirection();
 
 // ============== do stuff
 
-var clock = Stopwatch.StartNew();
-var t = await SiiDecryptor.DecryptScsc(File.ReadAllBytes("testsave_withjobs.sii"));
-var decodedFile = SiiDecoder.DecodeSii(t);
-clock.Stop();
-Console.WriteLine($"Decryption, decompression, and decoding completed in {clock.ElapsedMilliseconds} ms");
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TrookDbContext>();
+    db.Database.Migrate();
+    
+    var fs = scope.ServiceProvider.GetRequiredService<FileService>();
+    await fs.ReadAndSaveFileAsync("profile.sii");
+}
 
-Console.WriteLine($"decoded file has {decodedFile.StructureCount} structure blocks!");
-Console.WriteLine($"decoded file has {decodedFile.DataCount} data blocks!");
-
-// list economy fields
-var econ = decodedFile.GetDataByStructureName("economy").First();
-var player = decodedFile.GetData(econ.GetValue<BlockId>("player").Key);
-
-Console.WriteLine("Foo!");
+app.Run();

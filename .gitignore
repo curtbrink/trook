@@ -1,7 +1,11 @@
 bin/
+# bad dotnet tool
+*/bin\\Debug/
+*/bin\\Release/
 obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
 *.DotSettings.user
+*.sii
