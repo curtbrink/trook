@@ -25,6 +25,20 @@ public readonly record struct BlockId
         Key = BuildKey(length, parts);
     }
 
+    public BlockId(string stringId)
+    {
+        // assuming it's a _nameless.*
+        _length = 0xFF;
+        var partsString = string.Join("", stringId[10..].Split('.'));
+        if (partsString.Length % 2 != 0) partsString = $"0{partsString}";
+
+        var bytes = new byte[8];
+        Convert.FromHexString(partsString, bytes, out _, out _);
+        _parts = [BitConverter.ToUInt64(bytes, 0)];
+
+        Key = BuildKey(_length, _parts);
+    }
+
     private static string BuildKey(byte l, ulong[] p)
     {
         // nameless id is special

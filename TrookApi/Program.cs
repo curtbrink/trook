@@ -1,9 +1,6 @@
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 using TrookApi.Services;
-using TrookSii;
-using TrookSii.Types.Raw;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +37,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
     
     var fs = scope.ServiceProvider.GetRequiredService<FileService>();
-    await fs.ReadAndSaveFileAsync("testsave_withjobs.sii");
+    await fs.ReadAndSaveFileAsync("profile.sii");
 }
 
 app.Run();
