@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import {apiGet} from "@/api/client.ts";
+import {ref, watchEffect} from "vue";
+
 defineProps<{
   msg: string
 }>()
+
+const hello = ref('');
+
+watchEffect(async () => {
+  const msg = await apiGet<{ foo: string }>("api/v1/trook/hello");
+  hello.value = msg.foo;
+});
 </script>
 
 <template>
@@ -12,6 +22,7 @@ defineProps<{
       <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>. What's next?
     </h3>
+    <h4>Here's a message from the backend: {{ hello }}</h4>
   </div>
 </template>
 

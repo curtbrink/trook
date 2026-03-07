@@ -19,7 +19,12 @@ builder.Services.AddScoped<FileService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,7 +32,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+app.MapControllers();
 
 // ============== do stuff
 
@@ -40,4 +45,4 @@ using (var scope = app.Services.CreateScope())
     await fs.ReadAndSaveFileAsync("profile.sii");
 }
 
-app.Run();
+app.Run("http://localhost:56277");

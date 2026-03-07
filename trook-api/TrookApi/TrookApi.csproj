@@ -7,34 +7,60 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <VueAppRoot>../../trook-vue/</VueAppRoot>
+        <VueAppBuild>$(VueAppRoot)dist/</VueAppBuild>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TrookSii\TrookSii.csproj" />
+        <ProjectReference Include="..\TrookSii\TrookSii.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="testsave.sii">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+        <None Update="testsave.sii">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
+
+    <Target Name="VueClean" BeforeTargets="Build">
+        <RemoveDir Directories="wwwroot"/>
+        <MakeDir Directories="wwwroot"/>
+    </Target>
+
+    <Target Name="VueBuild" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <Message Importance="high" Text="VueBuild: npm ci" />
+        <Exec WorkingDirectory="$(VueAppRoot)" Command="npm ci" />
+        
+        <Message Importance="high" Text="VueBuild: npm run build" />
+        <Exec WorkingDirectory="$(VueAppRoot)" Command="npm run build" />
+    </Target>
+
+    <Target Name="VueCopy" AfterTargets="VueBuild" Condition="'$(Configuration)' == 'Release'">
+        <ItemGroup>
+            <VueFiles Include="$(VueAppBuild)**\*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(VueFiles)" 
+              DestinationFiles="@(VueFiles->'wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
+    </Target>
 
 </Project>
