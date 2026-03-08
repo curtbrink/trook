@@ -28,7 +28,7 @@
             min-height="70vh"
             rounded="lg"
           >
-            Response from backend but now within a routed view: {{ message }}
+            Response from backend with a driver job: {{ message }}
           </v-sheet>
         </v-col>
       </v-row>
@@ -39,11 +39,13 @@
 <script setup lang="ts">
 import {ref, watchEffect} from "vue";
 import {apiGet} from "@/api/client.ts";
+import type {DriverJob} from "@/api/models/driver-job.model.ts";
 
 const message = ref('');
 
 watchEffect(async () => {
-  const resp = await apiGet<{ foo: string }>('/api/v1/trook/hello');
-  message.value = resp.foo;
+  const resp = await apiGet<DriverJob[]>('/api/v1/trook/jobs');
+  const first = resp[0]!;
+  message.value = `${first.driverId} | ${first.sourceCity} => ${first.destinationCity} | ${first.distance}km`;
 })
 </script>

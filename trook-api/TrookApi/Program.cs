@@ -57,19 +57,7 @@ app.Lifetime.ApplicationStarted.Register(() =>
     // open the vite url if dev
     var port = app.Environment.IsDevelopment() ? 56279 : apiPort;
     var url = $"http://localhost:{port}";
-    // Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
-    
-    using var scope = app.Services.CreateScope();
-    var fs = scope.ServiceProvider.GetRequiredService<FileService>();
-    var djs = scope.ServiceProvider.GetRequiredService<DriverJobService>();
-    var t = fs.ReadAndSaveFileAsync("game_wjobs.sii");
-    Task.WaitAll(t);
-    var sii = t.Result;
-    if (sii != null && sii is SiiBinaryFile sbf)
-    {
-        var t2 = djs.ExtractDriverJobs(sbf);
-        Task.WaitAll(t2);
-    }
+    Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
 });
 
 app.Run($"http://localhost:{apiPort}");
