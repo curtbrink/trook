@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 using TrookApi.Services;
+using TrookSii.Types.Raw;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<TrookDbContext>(o =>
 // ===== configure services =====
 
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<DriverJobService>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
@@ -55,7 +57,19 @@ app.Lifetime.ApplicationStarted.Register(() =>
     // open the vite url if dev
     var port = app.Environment.IsDevelopment() ? 56279 : apiPort;
     var url = $"http://localhost:{port}";
-    Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+    // Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+    
+    using var scope = app.Services.CreateScope();
+    var fs = scope.ServiceProvider.GetRequiredService<FileService>();
+    var djs = scope.ServiceProvider.GetRequiredService<DriverJobService>();
+    var t = fs.ReadAndSaveFileAsync("game_wjobs.sii");
+    Task.WaitAll(t);
+    var sii = t.Result;
+    if (sii != null && sii is SiiBinaryFile sbf)
+    {
+        var t2 = djs.ExtractDriverJobs(sbf);
+        Task.WaitAll(t2);
+    }
 });
 
 app.Run($"http://localhost:{apiPort}");

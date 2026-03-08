@@ -33,7 +33,7 @@ public class DataBlock(BlockId blockId, StructureBlock structure, IList<(ValueDe
         return siiPrimitive.ValueType switch
         {
             SiiValueType.String when typeof(T) == typeof(string) => (T)siiPrimitive.Value,
-            SiiValueType.EncodedString when typeof(T) == typeof(string) => (T)siiPrimitive.Value,
+            SiiValueType.EncodedString when typeof(T) == typeof(string) => (T)(object)((EncodedString)siiPrimitive.Value).ToString(),
             SiiValueType.Byte when typeof(T) == typeof(byte) => (T)siiPrimitive.Value,
             SiiValueType.UShort when typeof(T) == typeof(ushort) => (T)siiPrimitive.Value,
             SiiValueType.Short when typeof(T) == typeof(short) => (T)siiPrimitive.Value,

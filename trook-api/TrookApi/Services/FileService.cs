@@ -2,12 +2,13 @@ using System.Security.Cryptography;
 using TrookApi.Database;
 using TrookApi.Database.Entities;
 using TrookSii;
+using TrookSii.Types.Raw;
 
 namespace TrookApi.Services;
 
 public class FileService(TrookDbContext db, ILogger<FileService> logger)
 {
-    public async Task ReadAndSaveFileAsync(string filePath)
+    public async Task<SiiFile?> ReadAndSaveFileAsync(string filePath)
     {
         var fileBytes = await File.ReadAllBytesAsync(filePath);
         var fileHash = MD5.HashData(fileBytes);
@@ -15,7 +16,7 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
         if (db.ProcessedFiles.Any(pf => pf.IsSuccess && pf.FileHash == fileHash))
         {
             logger.LogInformation("File already processed, skipping");
-            return;
+            return null;
         }
         
         var decrypted = await SiiDecryptor.DecryptScsc(fileBytes);
@@ -28,5 +29,7 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
             IsSuccess = true
         });
         await db.SaveChangesAsync();
+
+        return decoded;
     }
 }
