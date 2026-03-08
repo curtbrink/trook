@@ -10,3 +10,4 @@ riderModule.iml
 *.DotSettings.user
 *.sii
 wwwroot/
+.vite/
