@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container>
+    <v-container fluid>
       <v-row>
         <v-col cols="2">
           <v-sheet rounded="lg">
@@ -23,12 +23,14 @@
           </v-sheet>
         </v-col>
 
-        <v-col>
+        <v-col cols="10">
           <v-sheet
             min-height="70vh"
             rounded="lg"
           >
-            Response from backend with a driver job: {{ message }}
+            <v-data-table
+              :headers="columns"
+              :items="store.driverJobs" />
           </v-sheet>
         </v-col>
       </v-row>
@@ -37,15 +39,30 @@
 </template>
 
 <script setup lang="ts">
-import {ref, watchEffect} from "vue";
-import {apiGet} from "@/api/client.ts";
+import {onMounted, ref} from "vue";
+import {useDriverJobsStore} from "@/stores/driver-jobs.store.ts";
 import type {DriverJob} from "@/api/models/driver-job.model.ts";
 
-const message = ref('');
+const store = useDriverJobsStore();
 
-watchEffect(async () => {
-  const resp = await apiGet<DriverJob[]>('/api/v1/trook/jobs');
-  const first = resp[0]!;
-  message.value = `${first.driverId} | ${first.sourceCity} => ${first.destinationCity} | ${first.distance}km`;
-})
+onMounted(() => {
+  store.loadJobs();
+});
+
+const columns = [
+  { title: "Day", key: "dayCompleted" },
+  { title: "Driver", key: "driverId" },
+  { title: "Cargo", key: "cargoType" },
+  { title: "Amt", key: "cargoSize" },
+  { title: "Dist", key: "distance" },
+  { title: "From City", key: "sourceCity" },
+  { title: "From Co.", key: "sourceCompany" },
+  { title: "To City", key: "destinationCity" },
+  { title: "To Co.", key: "destinationCompany" },
+  {
+    title: "Profit",
+    key: "profit",
+    value: (item: DriverJob) => item.revenue - item.wage - item.fuel - item.maintenance,
+  },
+];
 </script>

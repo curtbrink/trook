@@ -3,7 +3,7 @@
   <v-app id="inspire">
     <v-theme-provider theme="dark">
     <v-app-bar flat>
-      <v-container class="mx-auto d-flex align-center justify-center">
+      <v-container fluid class="mx-auto d-flex align-center justify-center">
         <v-avatar
           class="me-4 "
           color="grey-darken-1"
