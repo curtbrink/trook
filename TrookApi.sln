@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookApi", "TrookApi\TrookApi.csproj", "{77D1FE7E-508A-4B08-9CE9-BED584CC6659}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookApi", "trook-api\TrookApi\TrookApi.csproj", "{77D1FE7E-508A-4B08-9CE9-BED584CC6659}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookSii", "TrookSii\TrookSii.csproj", "{B42FEFBA-0406-4E34-9F4E-01239EF05663}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookSii", "trook-api\TrookSii\TrookSii.csproj", "{B42FEFBA-0406-4E34-9F4E-01239EF05663}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookSii.Tests", "TrookSii.Tests\TrookSii.Tests.csproj", "{8D39D9EB-2F7F-4393-AF8A-D450941B75D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrookSii.Tests", "trook-api\TrookSii.Tests\TrookSii.Tests.csproj", "{8D39D9EB-2F7F-4393-AF8A-D450941B75D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

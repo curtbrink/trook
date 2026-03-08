@@ -1,7 +1,7 @@
 bin/
 # bad dotnet tool
-*/bin\\Debug/
-*/bin\\Release/
+**/bin\\Debug/
+**/bin\\Release/
 obj/
 /packages/
 riderModule.iml
@@ -9,3 +9,4 @@ riderModule.iml
 .idea/
 *.DotSettings.user
 *.sii
+wwwroot/
