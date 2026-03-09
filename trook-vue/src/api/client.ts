@@ -1,10 +1,20 @@
 import type {DriverJob} from "@/api/models/driver-job.model.ts";
 
 export async function queryDriverJobs(): Promise<DriverJob[]> {
-  const baseEndpoint = '/api/v1/trook/jobs';
+  const baseEndpoint = '/api/v1/jobs';
 
   // for now get all
   return apiGet<DriverJob[]>(baseEndpoint);
+}
+
+export async function clearAllData(): Promise<void> {
+  const baseEndpoint = '/api/v1/admin/clear-all'
+  return apiPost<void>(baseEndpoint, null);
+}
+
+export async function ingestFile(filePath: string): Promise<void> {
+  const baseEndpoint = '/api/v1/admin/ingest-file';
+  return apiPost<void>(baseEndpoint, { filePath });
 }
 
 async function apiGet<T>(url: string): Promise<T> {

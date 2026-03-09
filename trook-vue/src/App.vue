@@ -12,8 +12,9 @@
 
         <v-btn
           v-for="link in links"
-          :key="link"
-          :text="link"
+          :key="link.title"
+          :text="link.title"
+          :to="link.route"
           variant="text"
         ></v-btn>
 
@@ -42,10 +43,8 @@
 
 <script setup lang="ts">
 const links = [
-  'Dashboard',
-  'Messages',
-  'Profile',
-  'Updates',
+  { title: 'Dashboard', route: '/' },
+  { title: 'Utilities', route: '/utilities' },
 ]
 </script>
 
@@ -53,10 +52,8 @@ const links = [
 export default {
   data: () => ({
     links: [
-      'Dashboard',
-      'Messages',
-      'Profile',
-      'Updates',
+      { title: 'Dashboard', route: '/' },
+      { title: 'Utilities', route: '/utilities' },
     ],
   }),
 }
