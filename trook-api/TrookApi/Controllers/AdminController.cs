@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
-using TrookApi.DTOs;
 using TrookApi.Services;
 using TrookSii.Types.Raw;
 
@@ -21,11 +20,18 @@ public class AdminController(FileService fileService, DriverJobService driverJob
     }
 
     [HttpPost("ingest-file")]
-    public async Task<IActionResult> IngestFile(IngestFileRequest request)
+    public async Task<IActionResult> IngestFile([FromForm] IFormFile file)
     {
         logger.LogInformation("Processing file!");
-        var file = await fileService.ReadAndSaveFileAsync(request.FilePath);
-        if (file is not SiiBinaryFile sbf)
+        
+        var l = file.Length;
+        var bytes = new byte[l];
+        var writeStream = new MemoryStream(bytes);
+        using var stream = file.OpenReadStream();
+        await stream.CopyToAsync(writeStream);
+
+        var processed = await fileService.SaveFileAsync(file.FileName, bytes);
+        if (processed is not SiiBinaryFile sbf)
         {
             return BadRequest();
         }
