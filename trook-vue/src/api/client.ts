@@ -17,17 +17,17 @@ export async function ingestFile(form: FormData): Promise<void> {
   return apiPostForm<void>(baseEndpoint, form);
 }
 
-async function apiGet<T>(url: string): Promise<T> {
+async function apiGet<T = void>(url: string): Promise<T extends void ? void : T> {
   const response = await fetch(url)
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`)
   }
 
-  return await response.json()
+  return await parseJson<T>(response);
 }
 
-async function apiPostForm<T>(url: string, body: FormData): Promise<T> {
+async function apiPostForm<T = void>(url: string, body: FormData): Promise<T extends void ? void : T> {
   const response = await fetch(url, {
     method: "POST",
     body
@@ -37,10 +37,10 @@ async function apiPostForm<T>(url: string, body: FormData): Promise<T> {
     throw new Error(`API error: ${response.status}`)
   }
 
-  return await response.json()
+  return await parseJson<T>(response);
 }
 
-async function apiPost<T>(url: string, body: any): Promise<T> {
+async function apiPost<T = void>(url: string, body: any): Promise<T extends void ? void : T> {
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -53,5 +53,13 @@ async function apiPost<T>(url: string, body: any): Promise<T> {
     throw new Error(`API error: ${response.status}`)
   }
 
-  return await response.json()
+  return await parseJson<T>(response);
+}
+
+async function parseJson<T = void>(response: Response): Promise<T extends void ? void : T> {
+  try {
+    return await response.json();
+  } catch (err) {
+    return undefined as any;
+  }
 }

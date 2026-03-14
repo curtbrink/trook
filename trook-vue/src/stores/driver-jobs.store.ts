@@ -20,6 +20,11 @@ export const useDriverJobsStore = defineStore('driver-jobs', {
         console.error("Failed to load driver jobs", err);
       }
       this.loading = false;
+    },
+    async clear() {
+      this.driverJobs = [];
+      this.loaded = false;
+      this.loading = false;
     }
   }
 })

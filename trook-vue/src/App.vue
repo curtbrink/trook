@@ -35,17 +35,21 @@
     </v-app-bar>
 
       <RouterView />
-
+<v-snackbar-queue v-model="snackbar.messages" :total-visible="3" />
     </v-theme-provider>
   </v-app>
   </div>
 </template>
 
 <script setup lang="ts">
+import {useSnackbarStore} from "@/stores/snackbar.store.ts";
+
 const links = [
   { title: 'Dashboard', route: '/' },
   { title: 'Utilities', route: '/utilities' },
 ]
+
+const snackbar = useSnackbarStore();
 </script>
 
 <script lang="ts">
