@@ -17,6 +17,7 @@ builder.Services.AddDbContext<TrookDbContext>(o => { o.UseSqlite($"Data Source={
 
 // ===== configure services =====
 
+builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<DriverJobService>();
 

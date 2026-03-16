@@ -43,6 +43,7 @@
 
 <script setup lang="ts">
 import {useSnackbarStore} from "@/stores/snackbar.store.ts";
+import {useProfilesStore} from "@/stores/profiles.store.ts";
 
 const links = [
   { title: 'Dashboard', route: '/' },
@@ -50,6 +51,9 @@ const links = [
 ]
 
 const snackbar = useSnackbarStore();
+const profileStore = useProfilesStore();
+
+profileStore.loadProfiles();
 </script>
 
 <script lang="ts">

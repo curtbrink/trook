@@ -1,10 +1,24 @@
 import type {DriverJob} from "@/api/models/driver-job.model.ts";
+import type {Profile} from "@/api/models/profile.model.ts";
 
 export async function queryDriverJobs(): Promise<DriverJob[]> {
   const baseEndpoint = '/api/v1/jobs';
 
   // for now get all
   return apiGet<DriverJob[]>(baseEndpoint);
+}
+
+export async function queryProfiles(): Promise<Profile[]> {
+  const baseEndpoint = '/api/v1/profiles';
+
+  // for now get all
+  return apiGet<Profile[]>(baseEndpoint);
+}
+
+export async function createProfile(name: string): Promise<Profile> {
+  const baseEndpoint = '/api/v1/profiles';
+
+  return apiPost<Profile>(baseEndpoint, { name });
 }
 
 export async function clearAllData(): Promise<void> {
