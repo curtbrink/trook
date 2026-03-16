@@ -11,6 +11,12 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
     public async Task<SiiFile?> ReadAndSaveFileAsync(string filePath)
     {
         var fileBytes = await File.ReadAllBytesAsync(filePath);
+        var fileName = Path.GetFileName(filePath);
+        return await SaveFileAsync(fileName, fileBytes);
+    }
+
+    public async Task<SiiFile?> SaveFileAsync(string fileName, byte[] fileBytes)
+    {
         var fileHash = MD5.HashData(fileBytes);
 
         if (db.ProcessedFiles.Any(pf => pf.IsSuccess && pf.FileHash == fileHash))
@@ -25,7 +31,7 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
         db.ProcessedFiles.Add(new ProcessedFile
         {
             FileHash = fileHash,
-            FileName = Path.GetFileName(filePath),
+            FileName = fileName,
             IsSuccess = true
         });
         await db.SaveChangesAsync();

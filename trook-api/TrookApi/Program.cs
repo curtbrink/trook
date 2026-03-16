@@ -26,6 +26,7 @@ builder.Services.AddScoped<DriverJobService>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddLogging(logging => logging.AddConsole());
 
 var app = builder.Build();
 
