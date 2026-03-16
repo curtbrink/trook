@@ -17,14 +17,16 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
 
     public async Task<SiiFile?> SaveFileAsync(string fileName, byte[] fileBytes)
     {
+        logger.LogInformation("Processing file {FileName} (size = {Size} bytes)...", fileName, fileBytes.Length);
         var fileHash = MD5.HashData(fileBytes);
 
         if (db.ProcessedFiles.Any(pf => pf.IsSuccess && pf.FileHash == fileHash))
         {
-            logger.LogInformation("File already processed, skipping");
+            logger.LogInformation("File already processed; skipping");
             return null;
         }
-        
+
+        logger.LogInformation("Decrypting and decoding file...");
         var decrypted = await SiiDecryptor.DecryptScsc(fileBytes);
         var decoded = SiiDecoder.DecodeSii(decrypted);
 
@@ -36,6 +38,7 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
         });
         await db.SaveChangesAsync();
 
+        logger.LogInformation("Successfully processed file");
         return decoded;
     }
 }

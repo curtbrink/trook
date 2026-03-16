@@ -8,7 +8,11 @@ namespace TrookApi.Controllers;
 
 [ApiController]
 [Route("/api/v1/admin")]
-public class AdminController(FileService fileService, DriverJobService driverJobService, TrookDbContext db, ILogger<AdminController> logger) : ControllerBase
+public class AdminController(
+    FileService fileService,
+    DriverJobService driverJobService,
+    TrookDbContext db,
+    ILogger<AdminController> logger) : ControllerBase
 {
     [HttpPost("clear-all")]
     public async Task<IActionResult> ClearData()
@@ -23,11 +27,11 @@ public class AdminController(FileService fileService, DriverJobService driverJob
     public async Task<IActionResult> IngestFile([FromForm] IFormFile file)
     {
         logger.LogInformation("Processing file!");
-        
+
         var l = file.Length;
         var bytes = new byte[l];
         var writeStream = new MemoryStream(bytes);
-        using var stream = file.OpenReadStream();
+        await using var stream = file.OpenReadStream();
         await stream.CopyToAsync(writeStream);
 
         var processed = await fileService.SaveFileAsync(file.FileName, bytes);

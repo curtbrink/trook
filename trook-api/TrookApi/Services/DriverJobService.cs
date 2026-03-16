@@ -9,6 +9,7 @@ public class DriverJobService(TrookDbContext db, ILogger<DriverJobService> logge
 {
     public async Task ExtractDriverJobs(SiiBinaryFile file)
     {
+        logger.LogInformation("Extracting driver jobs from file...");
         var jobsToSave = new List<DriverJob>();
         var drivers = file.GetDataByStructureName("driver_ai");
         foreach (var driver in drivers)
@@ -22,12 +23,14 @@ public class DriverJobService(TrookDbContext db, ILogger<DriverJobService> logge
                 jobsToSave.Add(job);
             }
         }
-        
+
+        logger.LogInformation("Driver jobs extracted; saving to database...");
         await db.AddRangeAsync(jobsToSave);
         await db.SaveChangesAsync();
+        logger.LogInformation("Successfully saved driver jobs");
     }
 
-    private DriverJob MapJob(DataBlock entry, DataBlock driver)
+    private static DriverJob MapJob(DataBlock entry, DataBlock driver)
     {
         var isRevenue = entry.GetValue<bool>("distance_on_job");
         // fill out required fields

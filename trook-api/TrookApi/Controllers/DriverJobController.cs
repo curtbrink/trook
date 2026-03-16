@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 
 namespace TrookApi.Controllers;
@@ -11,7 +12,7 @@ public class DriverJobController(TrookDbContext db, ILogger<DriverJobController>
     public async Task<IActionResult> GetJobs()
     {
         logger.LogInformation("Getting all driver jobs");
-        var jobs = db.DriverJobs.ToList();
+        var jobs = await db.DriverJobs.ToListAsync();
         return Ok(jobs);
     }
 }

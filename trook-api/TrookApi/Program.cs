@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 using TrookApi.Services;
-using TrookSii.Types.Raw;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +13,7 @@ var sqliteDirectory = Path.Combine(Environment.GetFolderPath(Environment.Special
 Directory.CreateDirectory(sqliteDirectory);
 var sqliteFile = Path.Combine(sqliteDirectory, "trook.db");
 
-builder.Services.AddDbContext<TrookDbContext>(o =>
-{
-    o.UseSqlite($"Data Source={sqliteFile}");
-});
+builder.Services.AddDbContext<TrookDbContext>(o => { o.UseSqlite($"Data Source={sqliteFile}"); });
 
 // ===== configure services =====
 
