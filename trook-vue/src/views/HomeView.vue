@@ -1,6 +1,6 @@
 <template>
-  <v-main>
-    <v-container fluid>
+  <v-main fluid class="fill-height">
+    <v-container fluid class="fill-height">
       <v-row>
         <v-col cols="2">
           <v-sheet rounded="lg">
@@ -25,12 +25,13 @@
 
         <v-col cols="10">
           <v-sheet
-            min-height="70vh"
             rounded="lg"
+            height="100%"
           >
             <v-data-table
               :headers="columns"
-              :items="store.driverJobs" />
+              density="compact"
+              :items="store.driverJobs"/>
           </v-sheet>
         </v-col>
       </v-row>
@@ -39,9 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import {useDriverJobsStore} from "@/stores/driver-jobs.store.ts";
-import type {DriverJob} from "@/api/models/driver-job.model.ts";
+import { onMounted, ref } from "vue";
+import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
+import type { DriverJob } from "@/api/models/driver-job.model.ts";
 
 const store = useDriverJobsStore();
 

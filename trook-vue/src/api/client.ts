@@ -1,10 +1,24 @@
-import type {DriverJob} from "@/api/models/driver-job.model.ts";
+import type { DriverJob } from "@/api/models/driver-job.model.ts";
+import type { Profile } from "@/api/models/profile.model.ts";
 
-export async function queryDriverJobs(): Promise<DriverJob[]> {
-  const baseEndpoint = '/api/v1/jobs';
-
-  // for now get all
+export async function queryDriverJobs(profileId: string): Promise<DriverJob[]> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;
   return apiGet<DriverJob[]>(baseEndpoint);
+}
+
+export async function queryProfiles(): Promise<Profile[]> {
+  const baseEndpoint = '/api/v1/profiles';
+  return apiGet<Profile[]>(baseEndpoint);
+}
+
+export async function createProfile(name: string): Promise<Profile> {
+  const baseEndpoint = '/api/v1/profiles';
+  return apiPost<Profile>(baseEndpoint, { name });
+}
+
+export async function createProfileFromFile(form: FormData): Promise<Profile> {
+  const baseEndpoint = '/api/v1/profiles';
+  return apiPostForm<Profile>(baseEndpoint, form);
 }
 
 export async function clearAllData(): Promise<void> {
@@ -12,9 +26,9 @@ export async function clearAllData(): Promise<void> {
   return apiPost<void>(baseEndpoint, null);
 }
 
-export async function ingestFile(form: FormData): Promise<void> {
-  const baseEndpoint = '/api/v1/admin/ingest-file';
-  return apiPostForm<void>(baseEndpoint, form);
+export async function ingestDriverJobs(profileId: string, form: FormData): Promise<DriverJob[]> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;
+  return apiPostForm<DriverJob[]>(baseEndpoint, form);
 }
 
 async function apiGet<T = void>(url: string): Promise<T extends void ? void : T> {
