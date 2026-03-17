@@ -63,7 +63,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { VFileInput } from "vuetify/components/VFileInput";
-import { ingestFile } from "@/api/client.ts";
 import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
@@ -98,13 +97,13 @@ const filePicked = async () => {
   formData.set("file", file);
 
   try {
-    await ingestFile(formData);
-    await snackbar.addMessage('Successfully uploaded file!');
+    await profileStore.createProfileFromFile(formData);
+    await snackbar.addMessage("Successfully created profile! It's been selected for you!");
     files.value = null;
     await router.push({ path: "/" });
   } catch (err) {
     console.error(err);
-    await snackbar.addMessage(`Error occurred clearing data: ${err}`, true);
+    await snackbar.addMessage(`Error occurred creating profile: ${err}`, true);
   }
 }
 

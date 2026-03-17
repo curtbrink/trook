@@ -6,7 +6,10 @@ namespace TrookApi.Controllers;
 
 [ApiController]
 [Route("/api/v1/profiles")]
-public class ProfileController(ProfileService profileService, ILogger<ProfileController> logger) : ControllerBase
+public class ProfileController(
+    ProfileService profileService,
+    FileService fileService,
+    ILogger<ProfileController> logger) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetProfiles()
@@ -17,10 +20,26 @@ public class ProfileController(ProfileService profileService, ILogger<ProfileCon
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateProfile([FromBody] ProfileCreateRequest profile)
+    [Consumes("application/json")]
+    public async Task<IActionResult> CreateProfileFromJson([FromBody] ProfileCreateRequest profile)
     {
-        logger.LogInformation("Creating profile");
+        logger.LogInformation("Creating profile from json request");
         var createdProfile = await profileService.CreateProfile(profile);
         return Ok(createdProfile);
+    }
+
+    [HttpPost]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> CreateProfileFromFile([FromForm] IFormFile file)
+    {
+        logger.LogInformation("Creating profile from sii file");
+        var siiFile = await fileService.SaveFileFromFormAsync(file);
+        if (siiFile is null)
+        {
+            return BadRequest();
+        }
+
+        var profile = await profileService.CreateProfileFromSii(siiFile);
+        return Ok(profile);
     }
 }

@@ -21,6 +21,11 @@ export async function createProfile(name: string): Promise<Profile> {
   return apiPost<Profile>(baseEndpoint, { name });
 }
 
+export async function createProfileFromFile(form: FormData): Promise<Profile> {
+  const baseEndpoint = '/api/v1/profiles';
+  return apiPostForm<Profile>(baseEndpoint, form);
+}
+
 export async function clearAllData(): Promise<void> {
   const baseEndpoint = '/api/v1/admin/clear-all'
   return apiPost<void>(baseEndpoint, null);

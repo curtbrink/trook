@@ -15,6 +15,18 @@ public class FileService(TrookDbContext db, ILogger<FileService> logger)
         return await SaveFileAsync(fileName, fileBytes);
     }
 
+    public async Task<SiiFile?> SaveFileFromFormAsync(IFormFile formFile)
+    {
+        logger.LogInformation("Processing form data file {FileName}", formFile.FileName);
+        var l = formFile.Length;
+        var bytes = new byte[l];
+        var writeStream = new MemoryStream(bytes);
+        await using var stream = formFile.OpenReadStream();
+        await stream.CopyToAsync(writeStream);
+
+        return await SaveFileAsync(formFile.FileName, bytes);
+    }
+
     public async Task<SiiFile?> SaveFileAsync(string fileName, byte[] fileBytes)
     {
         logger.LogInformation("Processing file {FileName} (size = {Size} bytes)...", fileName, fileBytes.Length);

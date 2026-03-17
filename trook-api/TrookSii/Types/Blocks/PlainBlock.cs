@@ -139,4 +139,13 @@ public class PlainBlock(string structName, string id, IList<PlainSiiProperty> pr
     public BlockId Id { get; } = new(id);
 
     public IDictionary<string, PlainSiiProperty> Properties { get; } = properties.ToDictionary(p => p.Name, p => p);
+
+    public string GetScalar(string key)
+    {
+        var found = Properties.TryGetValue(key, out var prop);
+        if (!found || prop is not PlainSiiScalar scalarProp)
+            throw new InvalidOperationException($"Scalar property \"{key}\" not found in block");
+
+        return scalarProp.Value;
+    }
 }

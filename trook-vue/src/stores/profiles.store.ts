@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { createProfile, queryProfiles } from "@/api/client.ts";
+import { createProfile, createProfileFromFile, queryProfiles } from "@/api/client.ts";
 import type { Profile } from "@/api/models/profile.model.ts";
 import trookLocalStorage from "@/stores/local-storage.store.ts";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
@@ -56,6 +56,16 @@ export const useProfilesStore = defineStore('profiles', {
     },
     async createProfile(name: string) {
       const createdProfile = await createProfile(name);
+      if (!createdProfile?.id) {
+        console.error("Something went wrong");
+        return;
+      }
+
+      this.profiles.push(createdProfile);
+      await this.setSelectedProfileId(createdProfile.id);
+    },
+    async createProfileFromFile(form: FormData) {
+      const createdProfile = await createProfileFromFile(form);
       if (!createdProfile?.id) {
         console.error("Something went wrong");
         return;
