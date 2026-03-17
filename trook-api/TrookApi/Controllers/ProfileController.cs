@@ -33,13 +33,13 @@ public class ProfileController(
     public async Task<IActionResult> CreateProfileFromFile([FromForm] IFormFile file)
     {
         logger.LogInformation("Creating profile from sii file");
-        var siiFile = await fileService.SaveFileFromFormAsync(file);
-        if (siiFile is null)
+        var saveFileResult = await fileService.SaveFileFromFormAsync(file);
+        if (saveFileResult.SiiFile is null || saveFileResult.ProcessedFile is null)
         {
             return BadRequest();
         }
 
-        var profile = await profileService.CreateProfileFromSii(siiFile);
+        var profile = await profileService.CreateProfileFromSii(saveFileResult.SiiFile, saveFileResult.ProcessedFile);
         return Ok(profile);
     }
 }

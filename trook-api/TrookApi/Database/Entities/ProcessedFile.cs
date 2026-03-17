@@ -20,6 +20,10 @@ public class ProcessedFile
 
     [Column("deleted_at")]
     public DateTime? DeletedAt { get; init; }
+    
+    [ForeignKey(nameof(Profile))]
+    [Column("profile_id")]
+    public Guid? ProfileId { get; set; }
 
     [MaxLength(128)]
     [Column("file_name")]

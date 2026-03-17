@@ -19,6 +19,10 @@ public class DriverJob
     [Column("deleted_at")]
     public DateTime? DeletedAt { get; init; }
     
+    [ForeignKey(nameof(Profile))]
+    [Column("profile_id")]
+    public Guid ProfileId { get; init; }
+    
     [MaxLength(128)]
     [Column("driver_id")]
     public required string DriverId { get; init; } // future state: relation on Driver table

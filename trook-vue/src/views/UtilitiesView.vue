@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { VFileInput } from "vuetify/components/VFileInput";
-import { clearAllData, ingestFile } from "@/api/client.ts";
+import { clearAllData } from "@/api/client.ts";
 import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
@@ -58,14 +58,13 @@ const filePicked = async () => {
   formData.set("file", file);
 
   try {
-    await ingestFile(formData);
+    await driverJobsStore.postJobs(formData);
     await snackbar.addMessage('Successfully uploaded file!');
     files.value = null;
-    await driverJobsStore.clear();
     await router.push({ path: "/" });
   } catch (err) {
     console.error(err);
-    await snackbar.addMessage(`Error occurred clearing data: ${err}`, true);
+    await snackbar.addMessage(`Error occurred uploading jobs data: ${err}`, true);
   }
 }
 

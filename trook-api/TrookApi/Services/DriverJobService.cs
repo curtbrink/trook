@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 using TrookApi.Database.Entities;
 using TrookSii.Types.Blocks;
@@ -7,7 +8,13 @@ namespace TrookApi.Services;
 
 public class DriverJobService(TrookDbContext db, ILogger<DriverJobService> logger)
 {
-    public async Task ExtractDriverJobs(SiiBinaryFile file)
+    public async Task<List<DriverJob>> GetAllJobsForProfile(Guid profileId)
+    {
+        var allJobs = await db.DriverJobs.Where(dj => dj.ProfileId == profileId).ToListAsync();
+        return allJobs;
+    }
+    
+    public async Task<List<DriverJob>> ExtractDriverJobs(Guid profileId, SiiBinaryFile file)
     {
         logger.LogInformation("Extracting driver jobs from file...");
         var jobsToSave = new List<DriverJob>();
@@ -19,7 +26,7 @@ public class DriverJobService(TrookDbContext db, ILogger<DriverJobService> logge
             foreach (var pfe in entryIds)
             {
                 var entry = file.GetData(pfe.Key);
-                var job = MapJob(entry, driver);
+                var job = MapJob(entry, driver, profileId);
                 jobsToSave.Add(job);
             }
         }
@@ -28,14 +35,17 @@ public class DriverJobService(TrookDbContext db, ILogger<DriverJobService> logge
         await db.AddRangeAsync(jobsToSave);
         await db.SaveChangesAsync();
         logger.LogInformation("Successfully saved driver jobs");
+
+        return jobsToSave;
     }
 
-    private static DriverJob MapJob(DataBlock entry, DataBlock driver)
+    private static DriverJob MapJob(DataBlock entry, DataBlock driver, Guid profileId)
     {
         var isRevenue = entry.GetValue<bool>("distance_on_job");
         // fill out required fields
         var job = new DriverJob
         {
+            ProfileId = profileId,
             DriverId = driver.Id.Key,
             DayCompleted = entry.GetValue<uint>("timestamp_day"),
             IsEmpty = !isRevenue,

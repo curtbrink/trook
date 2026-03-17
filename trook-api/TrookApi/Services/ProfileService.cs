@@ -29,7 +29,7 @@ public class ProfileService(TrookDbContext db, ILogger<ProfileService> logger)
         return entity.Entity;
     }
 
-    public async Task<Profile> CreateProfileFromSii(SiiFile file)
+    public async Task<Profile> CreateProfileFromSii(SiiFile file, ProcessedFile processedFile)
     {
         logger.LogInformation("Creating new profile from sii file");
         // how to find name in this file??
@@ -45,6 +45,12 @@ public class ProfileService(TrookDbContext db, ILogger<ProfileService> logger)
         
         // go through the other method to save the entity
         var req = new ProfileCreateRequest { Name = $"{companyName} ({profileName})" };
-        return await CreateProfile(req);
+        var createdProfile = await CreateProfile(req);
+        
+        // also update the file entity
+        processedFile.ProfileId = createdProfile.Id;
+        await db.SaveChangesAsync();
+
+        return createdProfile;
     }
 }
