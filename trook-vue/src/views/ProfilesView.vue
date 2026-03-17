@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container class="mx-auto d-flex align-center justify-center">
+    <v-container class="mx-auto align-center justify-center">
       <v-row>
         <v-col cols="2"/>
         <v-col cols="8">
@@ -38,6 +38,24 @@
         </v-col>
         <v-col cols="2"/>
       </v-row>
+      <v-row v-if="profileStore.profiles.length">
+        <v-col cols="4"/>
+        <v-col cols="4">
+          <v-card>
+            <v-card-title>Select Profile</v-card-title>
+            <v-card-text>
+              <v-data-table hide-default-footer :headers="profileHeaders" :items="profileStore.profiles">
+                <!--suppress VueUnrecognizedSlot -->
+                <template v-slot:item.select="{ item }">
+                  <v-btn v-if="item.id !== profileStore.selectedProfileId" @click="selectProfile(item)">Select</v-btn>
+                  <v-chip v-else>Selected!</v-chip>
+                </template>
+              </v-data-table>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="4"/>
+      </v-row>
     </v-container>
   </v-main>
 </template>
@@ -45,20 +63,33 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { VFileInput } from "vuetify/components/VFileInput";
-import { clearAllData, ingestFile } from "@/api/client.ts";
+import { ingestFile } from "@/api/client.ts";
 import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
-import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
+import type { Profile } from "@/api/models/profile.model.ts";
 
 const snackbar = useSnackbarStore();
-const driverJobsStore = useDriverJobsStore();
 const profileStore = useProfilesStore();
 const router = useRouter();
+
+const profileHeaders = [
+  { title: "", key: "select", width: "20%", align: "center" },
+  { title: "Name", key: "name", width: "50%", align: "center" },
+  { title: "Created", key: "createdAt", width: "30%", align: "center" },
+];
 
 const files = ref<File | null>(null);
 
 const inputProfileName = ref<string | null>(null);
+
+const selectProfile = async (profile: Profile) => {
+  if (!profile.id) return;
+
+  await profileStore.setSelectedProfileId(profile.id);
+  await snackbar.addMessage(`Selected profile "${profile.name}"!`);
+  await router.push("/");
+}
 
 const filePicked = async () => {
   if (!files.value) return;
