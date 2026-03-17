@@ -2,11 +2,11 @@
   <div>
     <v-app-bar flat>
       <v-container fluid class="mx-auto d-flex align-center justify-center">
-        <v-avatar
-          class="me-4 "
-          color="grey-darken-1"
-          size="32"
-        ></v-avatar>
+        <v-btn icon class="me-4" :to="{ name: 'create-profile' }">
+          <v-avatar color="grey-darken-1" size="32">
+            <span class="text-headline-small">T</span>
+          </v-avatar>
+        </v-btn>
 
         <v-btn
           v-for="link in links"
@@ -38,14 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { useProfilesStore } from "@/stores/profiles.store.ts";
-
 const links = [
   { title: 'Dashboard', route: '/' },
   { title: 'Utilities', route: '/utilities' },
 ]
-
-const profileStore = useProfilesStore();
-
-await profileStore.loadProfiles();
 </script>
