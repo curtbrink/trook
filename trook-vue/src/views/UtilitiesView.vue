@@ -2,7 +2,7 @@
   <v-main>
     <v-container class="mx-auto d-flex align-center justify-center">
       <v-row>
-        <v-col cols="2" />
+        <v-col cols="2"/>
         <v-col cols="8">
           <v-card>
             <v-card-title>Utilities</v-card-title>
@@ -11,10 +11,11 @@
                 <v-row>
                   <v-col cols="4">
                     <v-file-input label="Choose file" prepend-icon="mdi-paperclip" hide-details
-                                  v-model="files" @change="filePicked" />
+                                  v-model="files" @change="filePicked"/>
                   </v-col>
                   <v-col cols="8">
-                    <span class="d-flex align-center fill-height">Choose a file to ingest data from.</span>
+                    <span
+                      class="d-flex align-center fill-height">Choose a file to ingest data from.</span>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -30,19 +31,19 @@
           </v-card>
 
         </v-col>
-        <v-col cols="2" />
+        <v-col cols="2"/>
       </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 import type { VFileInput } from "vuetify/components/VFileInput";
-import {clearAllData, ingestFile} from "@/api/client.ts";
-import {useSnackbarStore} from "@/stores/snackbar.store.ts";
-import {useRouter} from "vue-router";
-import {useDriverJobsStore} from "@/stores/driver-jobs.store.ts";
+import { clearAllData, ingestFile } from "@/api/client.ts";
+import { useSnackbarStore } from "@/stores/snackbar.store.ts";
+import { useRouter } from "vue-router";
+import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
 
 const snackbar = useSnackbarStore();
 const driverJobsStore = useDriverJobsStore();

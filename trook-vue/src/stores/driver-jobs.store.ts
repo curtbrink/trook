@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import type {DriverJob} from "@/api/models/driver-job.model.ts";
-import {queryDriverJobs} from "@/api/client.ts";
+import type { DriverJob } from "@/api/models/driver-job.model.ts";
+import { queryDriverJobs } from "@/api/client.ts";
 
 export const useDriverJobsStore = defineStore('driver-jobs', {
   state: () => ({

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import {queryProfiles} from "@/api/client.ts";
-import type {Profile} from "@/api/models/profile.model.ts";
+import { queryProfiles } from "@/api/client.ts";
+import type { Profile } from "@/api/models/profile.model.ts";
 import trookLocalStorage from "@/stores/local-storage.store.ts";
 
 export const useProfilesStore = defineStore('profiles', {

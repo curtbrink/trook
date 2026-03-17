@@ -1,5 +1,5 @@
-import type {DriverJob} from "@/api/models/driver-job.model.ts";
-import type {Profile} from "@/api/models/profile.model.ts";
+import type { DriverJob } from "@/api/models/driver-job.model.ts";
+import type { Profile } from "@/api/models/profile.model.ts";
 
 export async function queryDriverJobs(): Promise<DriverJob[]> {
   const baseEndpoint = '/api/v1/jobs';
