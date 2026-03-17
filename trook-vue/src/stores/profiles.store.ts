@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { queryProfiles } from "@/api/client.ts";
+import { createProfile, queryProfiles } from "@/api/client.ts";
 import type { Profile } from "@/api/models/profile.model.ts";
 import trookLocalStorage from "@/stores/local-storage.store.ts";
+import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
 
 export const useProfilesStore = defineStore('profiles', {
   state: () => ({
@@ -49,6 +50,19 @@ export const useProfilesStore = defineStore('profiles', {
     async setSelectedProfileId(profileId?: string) {
       this.selectedProfileId = profileId;
       trookLocalStorage.set("selectedProfileId", profileId);
+
+      // clear data from other stores
+      await useDriverJobsStore().clear();
+    },
+    async createProfile(name: string) {
+      const createdProfile = await createProfile(name);
+      if (!createdProfile?.id) {
+        console.error("Something went wrong");
+        return;
+      }
+
+      this.profiles.push(createdProfile);
+      await this.setSelectedProfileId(createdProfile.id);
     },
     async clear() {
       this.profiles = [];
