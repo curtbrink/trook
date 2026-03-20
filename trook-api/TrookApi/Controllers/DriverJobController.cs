@@ -6,7 +6,7 @@ namespace TrookApi.Controllers;
 
 [ApiController]
 [Route("/api/v1/profiles/{profileId:guid}/jobs")]
-public class DriverJobController(DriverJobService driverJobService, FileService fileService, ILogger<DriverJobController> logger) : ControllerBase
+public class DriverJobController(DriverJobService driverJobService, FileService fileService, ILogger<DriverJobController> logger, PlayerService playerService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetJobs([FromRoute] Guid profileId)
@@ -26,6 +26,8 @@ public class DriverJobController(DriverJobService driverJobService, FileService 
             return BadRequest();
         }
 
+        // TODO move player to a new controller
+        var playerResult = await playerService.ExtractPlayer(profileId, sbf);
         var newJobs = await driverJobService.ExtractDriverJobs(profileId, sbf);
 
         logger.LogInformation("Finished processing file");
