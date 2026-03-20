@@ -67,12 +67,14 @@ import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
 import type { Profile } from "@/api/models/profile.model.ts";
+import type { VDataTable } from "vuetify/components";
+type DataTableHeader = Exclude<NonNullable<VDataTable['$props']['headers']>[number], Readonly<unknown[]>>;
 
 const snackbar = useSnackbarStore();
 const profileStore = useProfilesStore();
 const router = useRouter();
 
-const profileHeaders = [
+const profileHeaders: DataTableHeader[] = [
   { title: "", key: "select", width: "20%", align: "center" },
   { title: "Name", key: "name", width: "50%", align: "center" },
   { title: "Created", key: "createdAt", width: "30%", align: "center" },
