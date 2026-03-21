@@ -32,9 +32,9 @@ export async function clearAllData(): Promise<void> {
   return apiPost<void>(baseEndpoint, null);
 }
 
-export async function ingestDriverJobs(profileId: string, form: FormData): Promise<DriverJob[]> {
-  const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;
-  return apiPostForm<DriverJob[]>(baseEndpoint, form);
+export async function ingestDataFromFile(profileId: string, form: FormData): Promise<void> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/files`;
+  return apiPostForm<void>(baseEndpoint, form);
 }
 
 async function apiGet<T = void>(url: string): Promise<T extends void ? void : T> {

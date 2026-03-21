@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TrookApi.Services;
-using TrookSii.Types.Raw;
 
 namespace TrookApi.Controllers;
 
@@ -14,23 +13,5 @@ public class DriverJobController(DriverJobService driverJobService, FileService 
         logger.LogInformation("Getting all driver jobs");
         var jobs = await driverJobService.GetAllJobsForProfile(profileId);
         return Ok(jobs);
-    }
-    
-    [HttpPost]
-    public async Task<IActionResult> ReadJobsFromFile([FromRoute] Guid profileId, [FromForm] IFormFile file)
-    {
-        logger.LogInformation("Reading driver jobs from sii file");
-        var saveFileResult = await fileService.SaveFileFromFormAsync(file, profileId);
-        if (saveFileResult.SiiFile is not SiiBinaryFile sbf || saveFileResult.ProcessedFile is null)
-        {
-            return BadRequest();
-        }
-
-        // TODO move player to a new controller
-        var playerResult = await playerService.ExtractPlayer(profileId, sbf);
-        var newJobs = await driverJobService.ExtractDriverJobs(profileId, sbf);
-
-        logger.LogInformation("Finished processing file");
-        return Ok(newJobs);
     }
 }

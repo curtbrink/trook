@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
-import type { DriverJob } from "@/api/models/driver-job.model.ts";
-import { ingestDriverJobs, queryDriverJobs, queryPlayerJobs } from "@/api/client.ts";
+import { queryPlayerJobs } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
-import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import type { PlayerJob } from "@/api/models/player-job.model.ts";
 
 export const usePlayerJobsStore = defineStore('player-jobs', {

@@ -5,6 +5,7 @@ import { useProfilesStore } from "@/stores/profiles.store.ts";
 import ProfilesView from "@/views/ProfilesView.vue";
 import DriverJobDashboard from "@/components/dashboards/DriverJobDashboard.vue";
 import PlayerJobDashboard from "@/components/dashboards/PlayerJobDashboard.vue";
+import FileIngestion from "@/components/utilities/FileIngestion.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +13,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      redirect: 'driver-jobs',
+      redirect: { name: 'driver-job-dashboard' },
       component: HomeView,
       children: [
         {
@@ -30,7 +31,15 @@ const router = createRouter({
     {
       path: '/utilities',
       name: 'utilities',
+      redirect: { name: 'file-ingestion' },
       component: UtilitiesView,
+      children: [
+        {
+          path: 'file-ingestion',
+          name: 'file-ingestion',
+          component: FileIngestion
+        }
+      ]
     },
     {
       path: '/profiles/create',
