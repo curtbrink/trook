@@ -89,7 +89,7 @@ const selectProfile = async (profile: Profile) => {
 
   await profileStore.setSelectedProfileId(profile.id);
   await snackbar.addMessage(`Selected profile "${profile.name}"!`);
-  await router.push("/");
+  await router.push({ name: "driver-job-dashboard" });
 }
 
 const filePicked = async () => {
@@ -102,7 +102,7 @@ const filePicked = async () => {
     await profileStore.createProfileFromFile(formData);
     await snackbar.addMessage("Successfully created profile! It's been selected for you!");
     files.value = null;
-    await router.push({ path: "/" });
+    await router.push({ name: "driver-job-dashboard" });
   } catch (err) {
     console.error(err);
     await snackbar.addMessage(`Error occurred creating profile: ${err}`, true);

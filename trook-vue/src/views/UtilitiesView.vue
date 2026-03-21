@@ -44,9 +44,11 @@ import { clearAllData } from "@/api/client.ts";
 import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
+import { usePlayerJobsStore } from "@/stores/player-jobs.store.ts";
 
 const snackbar = useSnackbarStore();
 const driverJobsStore = useDriverJobsStore();
+const playerJobsStore = usePlayerJobsStore();
 const router = useRouter();
 
 const files = ref<File | null>(null);
@@ -58,10 +60,11 @@ const filePicked = async () => {
   formData.set("file", file);
 
   try {
+    // TODO move file ingestion to a more generic API e.g. filestore/controller
     await driverJobsStore.postJobs(formData);
     await snackbar.addMessage('Successfully uploaded file!');
     files.value = null;
-    await router.push({ path: "/" });
+    await router.push({ name: "driver-job-dashboard" });
   } catch (err) {
     console.error(err);
     await snackbar.addMessage(`Error occurred uploading jobs data: ${err}`, true);
@@ -72,8 +75,9 @@ const clearData = async () => {
   try {
     await clearAllData();
     await driverJobsStore.clear();
+    await playerJobsStore.clear();
     await snackbar.addMessage('Successfully cleared all data');
-    await router.push({ path: "/" });
+    await router.push({ name: "driver-job-dashboard" });
   } catch (err) {
     console.error(err);
     await snackbar.addMessage(`Error occurred clearing data: ${err}`, true);

@@ -8,6 +8,19 @@ namespace TrookApi.Services;
 
 public class PlayerService(TrookDbContext db, ILogger<PlayerService> logger)
 {
+    public async Task<List<PlayerJob>> GetAllJobsForProfile(Guid profileId)
+    {
+        var player = await db.Players.FirstOrDefaultAsync(p => p.ProfileId == profileId);
+        if (player is null)
+        {
+            logger.LogError($"Player for profile id {profileId} not found");
+            return [];
+        }
+
+        var allJobs = await db.PlayerJobs.Where(dj => dj.PlayerId == player.Id).ToListAsync();
+        return allJobs;
+    }
+    
     public async Task<PlayerExtractResult> ExtractPlayer(Guid profileId, SiiBinaryFile file)
     {
         logger.LogInformation("Extracting player and delivery logs from file...");
