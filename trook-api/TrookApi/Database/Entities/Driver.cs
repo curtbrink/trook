@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrookApi.Database.Entities;
 
-[Table("players")]
-public class Player
+[Table("drivers")]
+public class Driver
 {
     [Key]
     [Column("id")]
@@ -26,15 +26,8 @@ public class Player
     [ForeignKey(nameof(Garage))]
     [Column("garage_id")]
     public Guid GarageId { get; init; }
-
+    
     [MaxLength(128)]
     [Column("driver_key")]
     public required string DriverKey { get; init; }
-
-    [Column("total_distance")]
-    public long TotalDistance { get; set; }
-    
-    [MaxLength(128)]
-    [Column("hq_city")]
-    public required string HeadquartersCity { get; set; }
 }

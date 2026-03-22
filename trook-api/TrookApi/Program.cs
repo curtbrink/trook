@@ -20,7 +20,7 @@ builder.Services.AddDbContext<TrookDbContext>(o => { o.UseSqlite($"Data Source={
 builder.Services.AddScoped<ProfileService>();
 builder.Services.AddScoped<DataIngestionService>();
 builder.Services.AddScoped<FileService>();
-builder.Services.AddScoped<DriverJobService>();
+builder.Services.AddScoped<DriverService>();
 builder.Services.AddScoped<PlayerService>();
 builder.Services.AddScoped<GarageService>();
 

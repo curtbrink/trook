@@ -1,57 +1,79 @@
 using TrookApi.Database;
 using TrookApi.Database.Entities;
+using TrookApi.DTOs;
+using TrookApi.Util;
 using TrookSii.Types.Raw;
 
 namespace TrookApi.Services;
 
 public class GarageService(TrookDbContext db, ILogger<GarageService> logger)
 {
-    public async Task ExtractGaragesFromFile(Guid profileId, SiiBinaryFile file)
+    public async Task<Result<GarageData>> ExtractGaragesFromFile(Guid profileId, SiiBinaryFile file)
     {
         logger.LogInformation("Extracting garage info from file...");
+        var garages = new List<Garage>();
+        var truckMap = new Dictionary<string, Garage>();
+        var trailerMap = new Dictionary<string, Garage>();
+        var driverMap = new Dictionary<string, Garage>();
+        var profitLogMap = new Dictionary<string, Garage>();
 
-        // todo for now we slam everything in the db.
-        // but maybe we want to limit to player-owned in the future.
-        // we definitely want to dedupe.
-        var allGarages = file.GetDataByStructureName("garage");
+        var returnVal = new GarageData(garages, driverMap, truckMap, trailerMap, profitLogMap);
 
-        var toSave = new List<Garage>();
-        foreach (var garageBlock in allGarages)
+        try
         {
-            // parse city key - it comes from the block id
-            var splitId = garageBlock.Id.Key.Split(".");
-            if (splitId.Length != 2)
-            {
-                logger.LogWarning("Couldn't identify garage block {Id}; is it formatted correctly?",
-                    garageBlock.Id.Key);
-                continue;
-            }
+            var allGarages = file.GetDataByStructureName("garage");
 
-            var garage = new Garage
+            foreach (var garageBlock in allGarages)
             {
-                ProfileId = profileId,
-                City = splitId[1],
-                Status = garageBlock.GetValue<uint>("status"),
-                Productivity = garageBlock.GetValue<float>("productivity")
-            };
-            toSave.Add(garage);
+                // parse city key - it comes from the block id
+                var splitId = garageBlock.Id.Key.Split(".");
+                if (splitId.Length != 2)
+                {
+                    logger.LogWarning("Couldn't identify garage block {Id}; is it formatted correctly?",
+                        garageBlock.Id.Key);
+                    continue;
+                }
+
+                var garage = new Garage
+                {
+                    ProfileId = profileId,
+                    City = splitId[1],
+                    Status = garageBlock.GetValue<uint>("status"),
+                    Productivity = garageBlock.GetValue<float>("productivity")
+                };
+                garages.Add(garage);
+                
+                // get child block lists
+                foreach (var blockId in garageBlock.GetArray<BlockId>("vehicles"))
+                {
+                    if (!blockId.IsEmpty)
+                        truckMap[blockId.Key] = garage;
+                }
+                foreach (var blockId in garageBlock.GetArray<BlockId>("trailers"))
+                {
+                    if (!blockId.IsEmpty)
+                        trailerMap[blockId.Key] = garage;
+                }
+                foreach (var blockId in garageBlock.GetArray<BlockId>("drivers"))
+                {
+                    if (!blockId.IsEmpty)
+                        driverMap[blockId.Key] = garage;
+                }
+
+                var profitLogId = garageBlock.GetValue<BlockId>("profit_log");
+                if (!profitLogId.IsEmpty)
+                    profitLogMap[profitLogId.Key] = garage;
+            }
         }
-        
-        await db.Garages.AddRangeAsync(toSave);
-        await db.SaveChangesAsync();
+        catch (Exception e)
+        {
+            var errMsg = "An error occurred extracting garages from file";
+            logger.LogError(e, errMsg);
+            return Result<GarageData>.Failure(errMsg, e);
+        }
+
+        var msg = "Successfully extracted garages from file";
+        logger.LogInformation(msg);
+        return Result<GarageData>.Success(returnVal, msg);
     }
-    
-    // save game contains ALL garages, owned and unowned.
-    // unowned appear to have status != 0
-    // status 3 = large?
-    // status 2 = medium?
-    // status 6 = tiny?
-    
-    // garage struct:
-    // - status (uint)
-    // - vehicles (blockid[])
-    // - drivers (blockid[])
-    // - trailers (blockid[])
-    // - profit_log (blockid)
-    // - productivity (float)
 }
