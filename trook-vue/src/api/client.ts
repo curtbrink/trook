@@ -1,6 +1,12 @@
 import type { DriverJob } from "@/api/models/driver-job.model.ts";
 import type { Profile } from "@/api/models/profile.model.ts";
 import type { PlayerJob } from "@/api/models/player-job.model.ts";
+import type { Garage } from "@/api/models/garage.model.ts";
+
+export async function queryGarages(profileId: string): Promise<Garage[]> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/garages`;
+  return apiGet<Garage[]>(baseEndpoint);
+}
 
 export async function queryDriverJobs(profileId: string): Promise<DriverJob[]> {
   const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;

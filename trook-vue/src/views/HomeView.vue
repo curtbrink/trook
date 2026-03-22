@@ -23,6 +23,7 @@
 import MenuList from "@/components/nav/MenuList.vue";
 
 const links = [
+  { text: 'Garages', route: 'garage-dashboard' },
   { text: 'Driver Jobs', route: 'driver-job-dashboard' },
   { text: 'Player Jobs', route: 'player-job-dashboard' },
 ];

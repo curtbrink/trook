@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TrookApi.Database;
 using TrookApi.Database.Entities;
 using TrookApi.DTOs;
@@ -8,6 +9,11 @@ namespace TrookApi.Services;
 
 public class GarageService(TrookDbContext db, ILogger<GarageService> logger)
 {
+    public async Task<List<Garage>> GetAllGaragesForProfile(Guid profileId)
+    {
+        return await db.Garages.Where(g => g.ProfileId == profileId).ToListAsync();
+    }
+    
     public async Task<Result<GarageData>> ExtractGaragesFromFile(Guid profileId, SiiBinaryFile file)
     {
         logger.LogInformation("Extracting garage info from file...");

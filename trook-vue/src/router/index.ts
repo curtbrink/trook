@@ -6,6 +6,7 @@ import ProfilesView from "@/views/ProfilesView.vue";
 import DriverJobDashboard from "@/components/dashboards/DriverJobDashboard.vue";
 import PlayerJobDashboard from "@/components/dashboards/PlayerJobDashboard.vue";
 import FileIngestion from "@/components/utilities/FileIngestion.vue";
+import GarageDashboard from "@/components/dashboards/GarageDashboard.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
           path: 'player-jobs',
           name: 'player-job-dashboard',
           component: PlayerJobDashboard,
+        },
+        {
+          path: 'garages',
+          name: 'garage-dashboard',
+          component: GarageDashboard,
         }
       ]
     },
