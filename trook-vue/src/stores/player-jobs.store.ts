@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import type { DriverJob } from "@/api/models/driver-job.model.ts";
-import { queryDriverJobs } from "@/api/client.ts";
+import { queryPlayerJobs } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
+import type { PlayerJob } from "@/api/models/player-job.model.ts";
 
-export const useDriverJobsStore = defineStore('driver-jobs', {
+export const usePlayerJobsStore = defineStore('player-jobs', {
   state: () => ({
-    driverJobs: [] as DriverJob[],
+    playerJobs: [] as PlayerJob[],
     loading: false,
     loaded: false,
   }),
@@ -23,15 +23,15 @@ export const useDriverJobsStore = defineStore('driver-jobs', {
       }
 
       try {
-        this.driverJobs = await queryDriverJobs(profileId);
+        this.playerJobs = await queryPlayerJobs(profileId);
         this.loaded = true;
       } catch (err) {
-        console.error("Failed to load driver jobs", err);
+        console.error("Failed to load player jobs", err);
       }
       this.loading = false;
     },
     async clear() {
-      this.driverJobs = [];
+      this.playerJobs = [];
       this.loaded = false;
       this.loading = false;
     }

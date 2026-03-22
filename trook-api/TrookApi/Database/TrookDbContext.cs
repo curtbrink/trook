@@ -10,4 +10,8 @@ public class TrookDbContext(DbContextOptions<TrookDbContext> options) : DbContex
     public DbSet<ProcessedFile> ProcessedFiles { get; set; }
 
     public DbSet<DriverJob> DriverJobs { get; set; }
+    
+    public DbSet<Player> Players { get; set; }
+    
+    public DbSet<PlayerJob> PlayerJobs { get; set; }
 }

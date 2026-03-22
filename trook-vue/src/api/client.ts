@@ -1,9 +1,15 @@
 import type { DriverJob } from "@/api/models/driver-job.model.ts";
 import type { Profile } from "@/api/models/profile.model.ts";
+import type { PlayerJob } from "@/api/models/player-job.model.ts";
 
 export async function queryDriverJobs(profileId: string): Promise<DriverJob[]> {
   const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;
   return apiGet<DriverJob[]>(baseEndpoint);
+}
+
+export async function queryPlayerJobs(profileId: string): Promise<PlayerJob[]> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/player`;
+  return apiGet<PlayerJob[]>(baseEndpoint);
 }
 
 export async function queryProfiles(): Promise<Profile[]> {
@@ -26,9 +32,9 @@ export async function clearAllData(): Promise<void> {
   return apiPost<void>(baseEndpoint, null);
 }
 
-export async function ingestDriverJobs(profileId: string, form: FormData): Promise<DriverJob[]> {
-  const baseEndpoint = `/api/v1/profiles/${profileId}/jobs`;
-  return apiPostForm<DriverJob[]>(baseEndpoint, form);
+export async function ingestDataFromFile(profileId: string, form: FormData): Promise<void> {
+  const baseEndpoint = `/api/v1/profiles/${profileId}/files`;
+  return apiPostForm<void>(baseEndpoint, form);
 }
 
 async function apiGet<T = void>(url: string): Promise<T extends void ? void : T> {
