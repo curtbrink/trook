@@ -7,6 +7,9 @@
     <template v-slot:top>
       <v-checkbox v-model="showAllChecked" label="Show All" />
     </template>
+    <template v-slot:item.city="{ item }">
+      <LocalizedString :s="item.city" />
+    </template>
   </v-data-table>
 </template>
 
@@ -14,6 +17,7 @@
 import { onMounted, ref, watchEffect } from "vue";
 import { useGaragesStore } from "@/stores/garages.store.ts";
 import type { Garage } from "@/api/models/garage.model.ts";
+import LocalizedString from "@/components/utilities/LocalizedString.vue";
 
 const store = useGaragesStore();
 

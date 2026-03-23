@@ -23,6 +23,7 @@ builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<DriverService>();
 builder.Services.AddScoped<PlayerService>();
 builder.Services.AddScoped<GarageService>();
+builder.Services.AddScoped<LocalizationService>();
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
