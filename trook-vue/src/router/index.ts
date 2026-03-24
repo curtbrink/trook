@@ -6,6 +6,9 @@ import ProfilesView from "@/views/ProfilesView.vue";
 import DriverJobDashboard from "@/components/dashboards/DriverJobDashboard.vue";
 import PlayerJobDashboard from "@/components/dashboards/PlayerJobDashboard.vue";
 import FileIngestion from "@/components/utilities/FileIngestion.vue";
+import GarageDashboard from "@/components/dashboards/GarageDashboard.vue";
+import { useLocalization } from "@/stores/local-strings.store.ts";
+import EditStrings from "@/components/utilities/EditStrings.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +28,11 @@ const router = createRouter({
           path: 'player-jobs',
           name: 'player-job-dashboard',
           component: PlayerJobDashboard,
+        },
+        {
+          path: 'garages',
+          name: 'garage-dashboard',
+          component: GarageDashboard,
         }
       ]
     },
@@ -38,6 +46,11 @@ const router = createRouter({
           path: 'file-ingestion',
           name: 'file-ingestion',
           component: FileIngestion
+        },
+        {
+          path: 'edit-strings',
+          name: 'edit-strings',
+          component: EditStrings,
         }
       ]
     },
@@ -51,9 +64,14 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   const profileStore = useProfilesStore();
+  const localizationStore = useLocalization();
 
   if (!profileStore.loaded) {
     await profileStore.loadProfiles();
+  }
+
+  if (!localizationStore.loaded) {
+    await localizationStore.loadStrings();
   }
 
   if (profileStore.profiles.length === 0) {

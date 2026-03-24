@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrookApi.Database;
 
@@ -10,9 +11,11 @@ using TrookApi.Database;
 namespace TrookApi.Database.Migrations
 {
     [DbContext(typeof(TrookDbContext))]
-    partial class TrookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260322192413_add_drivers_and_tweak_hierarchy")]
+    partial class add_drivers_and_tweak_hierarchy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
@@ -182,46 +185,6 @@ namespace TrookApi.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("garages");
-                });
-
-            modelBuilder.Entity("TrookApi.Database.Entities.LocalizationEntry", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("key");
-
-                    b.Property<string>("Localized")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("localized");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("profile_id");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("localized_strings");
                 });
 
             modelBuilder.Entity("TrookApi.Database.Entities.Player", b =>

@@ -3,6 +3,7 @@ import { ingestDataFromFile } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
 import { usePlayerJobsStore } from "@/stores/player-jobs.store.ts";
+import { useGaragesStore } from "@/stores/garages.store.ts";
 
 export const useFileIngestionStore = defineStore('file-ingestion', {
   state: () => ({}),
@@ -11,6 +12,7 @@ export const useFileIngestionStore = defineStore('file-ingestion', {
       const profileStore = useProfilesStore();
       const driverJobStore = useDriverJobsStore();
       const playerJobStore = usePlayerJobsStore();
+      const garageStore = useGaragesStore();
       // TODO other data types extracted from files' stores here
 
       const profileId = profileStore.selectedProfileId;
@@ -23,6 +25,7 @@ export const useFileIngestionStore = defineStore('file-ingestion', {
         await ingestDataFromFile(profileId, form);
         await driverJobStore.clear();
         await playerJobStore.clear();
+        await garageStore.clear();
       } catch (err) {
         console.error("Failed to save driver jobs from file", err);
       }

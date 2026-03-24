@@ -1,0 +1,40 @@
+import { defineStore } from 'pinia'
+import { queryGarages, queryPlayerJobs } from "@/api/client.ts";
+import { useProfilesStore } from "@/stores/profiles.store.ts";
+import type { PlayerJob } from "@/api/models/player-job.model.ts";
+import type { Garage } from "@/api/models/garage.model.ts";
+
+export const useGaragesStore = defineStore('garages', {
+  state: () => ({
+    garages: [] as Garage[],
+    loading: false,
+    loaded: false,
+  }),
+  actions: {
+    async loadGarages() {
+      if (this.loaded) return;
+
+      this.loading = true;
+
+      const profileId = useProfilesStore().selectedProfileId;
+      if (!profileId) {
+        this.loading = false;
+        console.error("No profile selected");
+        return;
+      }
+
+      try {
+        this.garages = await queryGarages(profileId);
+        this.loaded = true;
+      } catch (err) {
+        console.error("Failed to load garages", err);
+      }
+      this.loading = false;
+    },
+    async clear() {
+      this.garages = [];
+      this.loaded = false;
+      this.loading = false;
+    }
+  }
+})

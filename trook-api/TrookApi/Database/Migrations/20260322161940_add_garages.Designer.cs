@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrookApi.Database;
 
@@ -10,50 +11,14 @@ using TrookApi.Database;
 namespace TrookApi.Database.Migrations
 {
     [DbContext(typeof(TrookDbContext))]
-    partial class TrookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260322161940_add_garages")]
+    partial class add_garages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
-
-            modelBuilder.Entity("TrookApi.Database.Entities.Driver", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("DriverKey")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("driver_key");
-
-                    b.Property<Guid>("GarageId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("garage_id");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("profile_id");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("drivers");
-                });
 
             modelBuilder.Entity("TrookApi.Database.Entities.DriverJob", b =>
                 {
@@ -98,7 +63,9 @@ namespace TrookApi.Database.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("distance");
 
-                    b.Property<Guid>("DriverId")
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT")
                         .HasColumnName("driver_id");
 
@@ -113,6 +80,10 @@ namespace TrookApi.Database.Migrations
                     b.Property<long>("Maintenance")
                         .HasColumnType("INTEGER")
                         .HasColumnName("maintenance");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("profile_id");
 
                     b.Property<long>("Revenue")
                         .HasColumnType("INTEGER")
@@ -184,46 +155,6 @@ namespace TrookApi.Database.Migrations
                     b.ToTable("garages");
                 });
 
-            modelBuilder.Entity("TrookApi.Database.Entities.LocalizationEntry", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("key");
-
-                    b.Property<string>("Localized")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("localized");
-
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("profile_id");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("localized_strings");
-                });
-
             modelBuilder.Entity("TrookApi.Database.Entities.Player", b =>
                 {
                     b.Property<Guid>("Id")
@@ -238,16 +169,6 @@ namespace TrookApi.Database.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("TEXT")
                         .HasColumnName("deleted_at");
-
-                    b.Property<string>("DriverKey")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("driver_key");
-
-                    b.Property<Guid>("GarageId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("garage_id");
 
                     b.Property<string>("HeadquartersCity")
                         .IsRequired()

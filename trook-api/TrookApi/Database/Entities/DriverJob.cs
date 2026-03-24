@@ -19,13 +19,9 @@ public class DriverJob
     [Column("deleted_at")]
     public DateTime? DeletedAt { get; init; }
     
-    [ForeignKey(nameof(Profile))]
-    [Column("profile_id")]
-    public Guid ProfileId { get; init; }
-    
-    [MaxLength(128)]
+    [ForeignKey(nameof(Driver))]
     [Column("driver_id")]
-    public required string DriverId { get; init; } // future state: relation on Driver table
+    public Guid DriverId { get; init; }
     
     [Column("day_completed")]
     public uint DayCompleted { get; init; }

@@ -14,4 +14,10 @@ public class TrookDbContext(DbContextOptions<TrookDbContext> options) : DbContex
     public DbSet<Player> Players { get; set; }
     
     public DbSet<PlayerJob> PlayerJobs { get; set; }
+    
+    public DbSet<Garage> Garages { get; set; }
+    
+    public DbSet<Driver> Drivers { get; set; }
+    
+    public DbSet<LocalizationEntry> LocalizationEntries { get; set; }
 }

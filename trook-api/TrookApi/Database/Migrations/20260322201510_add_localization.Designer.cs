@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrookApi.Database;
 
@@ -10,9 +11,11 @@ using TrookApi.Database;
 namespace TrookApi.Database.Migrations
 {
     [DbContext(typeof(TrookDbContext))]
-    partial class TrookDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260322201510_add_localization")]
+    partial class add_localization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");

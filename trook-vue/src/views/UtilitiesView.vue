@@ -24,6 +24,6 @@ import MenuList from "@/components/nav/MenuList.vue";
 
 const links = [
   { text: 'Ingest File', route: 'file-ingestion' },
-  { text: 'Edit Strings', route: 'file-ingestion' }, // todo
+  { text: 'Edit Strings', route: 'edit-strings' },
 ];
 </script>
