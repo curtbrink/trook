@@ -27,7 +27,7 @@ public class LocalizationController(LocalizationService localizationService, ILo
 
     [HttpPut("{stringId:guid}")]
     public async Task<IActionResult> UpdateString([FromRoute] Guid profileId, [FromRoute] Guid stringId,
-        [FromBody] CreateStringRequest request)
+        [FromBody] UpdateStringRequest request)
     {
         logger.LogInformation("Updating value for localization entry");
         var entry = await localizationService.UpdateString(stringId, profileId, request);

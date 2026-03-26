@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import { queryGarages, queryPlayerJobs } from "@/api/client.ts";
+import { garagesApi } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
-import type { PlayerJob } from "@/api/models/player-job.model.ts";
 import type { Garage } from "@/api/models/garage.model.ts";
 
 export const useGaragesStore = defineStore('garages', {
@@ -24,7 +23,7 @@ export const useGaragesStore = defineStore('garages', {
       }
 
       try {
-        this.garages = await queryGarages(profileId);
+        this.garages = await garagesApi(profileId).query();
         this.loaded = true;
       } catch (err) {
         console.error("Failed to load garages", err);

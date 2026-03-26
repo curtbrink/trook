@@ -38,7 +38,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { VFileInput } from "vuetify/components/VFileInput";
-import { clearAllData } from "@/api/client.ts";
 import { useSnackbarStore } from "@/stores/snackbar.store.ts";
 import { useRouter } from "vue-router";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
@@ -71,16 +70,7 @@ const filePicked = async () => {
 }
 
 const clearData = async () => {
-  try {
-    await clearAllData();
-    await driverJobsStore.clear();
-    await playerJobsStore.clear();
-    await snackbar.addMessage('Successfully cleared all data');
-    await router.push({ name: "driver-job-dashboard" });
-  } catch (err) {
-    console.error(err);
-    await snackbar.addMessage(`Error occurred clearing data: ${err}`, true);
-  }
+  await snackbar.addMessage("No longer implemented! :(");
 }
 </script>
 

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { DriverJob } from "@/api/models/driver-job.model.ts";
-import { queryDriverJobs } from "@/api/client.ts";
+import { driverJobsApi } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
 
 export const useDriverJobsStore = defineStore('driver-jobs', {
@@ -23,7 +23,7 @@ export const useDriverJobsStore = defineStore('driver-jobs', {
       }
 
       try {
-        this.driverJobs = await queryDriverJobs(profileId);
+        this.driverJobs = await driverJobsApi(profileId).query();
         this.loaded = true;
       } catch (err) {
         console.error("Failed to load driver jobs", err);

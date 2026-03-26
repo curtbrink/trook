@@ -24,12 +24,11 @@ public class LocalizationService(TrookDbContext db, ILogger<LocalizationService>
         return newEntry;
     }
 
-    public async Task<LocalizationEntry> UpdateString(Guid id, Guid profileId, CreateStringRequest request)
+    public async Task<LocalizationEntry> UpdateString(Guid id, Guid profileId, UpdateStringRequest request)
     {
         try
         {
-            var entry = db.LocalizationEntries.First(le =>
-                le.Id == id && le.ProfileId == profileId && le.Key == request.Key);
+            var entry = db.LocalizationEntries.First(le => le.Id == id && le.ProfileId == profileId);
             entry.Localized = request.Localized;
             await db.SaveChangesAsync();
             return entry;

@@ -1,14 +1,6 @@
 import { defineStore } from 'pinia'
-import {
-  addLocalizedString,
-  queryGarages,
-  queryPlayerJobs,
-  queryStrings,
-  updateLocalizedString
-} from "@/api/client.ts";
+import { stringsApi } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
-import type { PlayerJob } from "@/api/models/player-job.model.ts";
-import type { Garage } from "@/api/models/garage.model.ts";
 import type { LocalizedString } from "@/api/models/local-string.model.ts";
 
 export const useLocalization = defineStore('localization', {
@@ -31,7 +23,7 @@ export const useLocalization = defineStore('localization', {
       }
 
       try {
-        this.localStrings = await queryStrings(profileId);
+        this.localStrings = await stringsApi(profileId).query();
         this.loaded = true;
       } catch (err) {
         console.error("Failed to load localized strings", err);
@@ -60,10 +52,7 @@ export const useLocalization = defineStore('localization', {
       const idx = this.localStrings.findIndex(it => it.id == id);
       if (idx == -1) return;
 
-      const entry = this.localStrings[idx];
-      const key = entry!.key;
-
-      const newEntry = await updateLocalizedString(profileId, id, key, value);
+      const newEntry = await stringsApi(profileId).update(id, value);
       this.localStrings.splice(idx, 1, newEntry);
     },
     async addString(key: string, value: string) {
@@ -74,7 +63,7 @@ export const useLocalization = defineStore('localization', {
         return;
       }
 
-      const newEntry = await addLocalizedString(profileId, key, value);
+      const newEntry = await stringsApi(profileId).create(key, value);
       this.localStrings.push(newEntry);
     }
   }

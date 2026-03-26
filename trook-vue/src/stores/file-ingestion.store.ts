@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ingestDataFromFile } from "@/api/client.ts";
+import { filesApi } from "@/api/client.ts";
 import { useProfilesStore } from "@/stores/profiles.store.ts";
 import { useDriverJobsStore } from "@/stores/driver-jobs.store.ts";
 import { usePlayerJobsStore } from "@/stores/player-jobs.store.ts";
@@ -22,7 +22,7 @@ export const useFileIngestionStore = defineStore('file-ingestion', {
       }
 
       try {
-        await ingestDataFromFile(profileId, form);
+        await filesApi(profileId).postFile(form);
         await driverJobStore.clear();
         await playerJobStore.clear();
         await garageStore.clear();
